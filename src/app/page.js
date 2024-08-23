@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from 'next/link';
-import Logo from ' ';
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -9,7 +8,6 @@ export default function Home() {
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-lg font-bold">
             <Link href="/" passHref>
-
               <span className="cursor-pointer">ZubiNest</span>
             </Link>
           </div>
@@ -20,10 +18,10 @@ export default function Home() {
             <Link href="/events" passHref>
               <span className="p-2 cursor-pointer">Events</span>
             </Link>
-            <Link href="/sign-in-side" passHref>
+            <Link href="/auth/signin" passHref>
               <span className="p-2 cursor-pointer">Log In</span>
             </Link>
-            <Link href="/sign-up" passHref>
+            <Link href="/auth/signup" passHref>
               <span className="p-2 cursor-pointer">Sign Up</span>
             </Link>
           </div>

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -31,6 +33,10 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+
+  console.log("EKNTUT??")
+
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

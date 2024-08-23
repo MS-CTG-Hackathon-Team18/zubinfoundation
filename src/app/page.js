@@ -18,19 +18,19 @@ export default function Home() {
             <Link href="/events" passHref>
               <span className="p-2 cursor-pointer">Events</span>
             </Link>
-            <Link href="/SignInSide" passHref>
-              <span className="p-2 cursor-pointer">Sign In Side View</span>
+            <Link href="/sign-in-side" passHref>
+              <span className="p-2 cursor-pointer">Sign In Side</span>
             </Link>
-            <Link href="/SignUp" passHref>
+            <Link href="/sign-up" passHref>
               <span className="p-2 cursor-pointer">Sign Up</span>
             </Link>
-            <Link href="./SignIn" passHref>
+            <Link href="/sign-in" passHref>
               <span className="p-2 cursor-pointer">Log In</span>
             </Link>
           </div>
         </div>
       </nav>
-      <div className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="flex min-h-screen flex-col items-center justify-between p-12">
         TESTING
       </div>
     </>

@@ -6,7 +6,6 @@ import Navigationbar from "@/components/Navigationbar";
 const EventsPage = () => {
   return (
     <>
-      <Navigationbar />
       <div className="font-sans font-bold flex flex-col justify-between my-10 rounded-lg mx-20">
         <div className="mb-5">
           <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
@@ -17,7 +16,7 @@ const EventsPage = () => {
           </h4>
         </div>
 
-        <div className="flex flex-wrap align-center">
+        <div className="flex flex-wrap align-center justify-center">
           <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />
           </div>
@@ -27,7 +26,7 @@ const EventsPage = () => {
           <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />
           </div>
-          <div className="my-3 mx-5">
+          {/* <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />
           </div>
           <div className="my-3 mx-5">
@@ -44,7 +43,7 @@ const EventsPage = () => {
           </div>
           <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />
-          </div>
+          </div> */}
         </div>
       </div>
     </>

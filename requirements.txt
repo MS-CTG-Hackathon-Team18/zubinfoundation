@@ -1,0 +1,14 @@
+python-dotenv
+langchain
+langchain_community
+langchain_chroma
+tiktoken
+langchain-openai
+langchainhub
+langsmith
+chromadb
+watermark
+jq
+pypdf
+# faiss-gpu
+faiss-cpu

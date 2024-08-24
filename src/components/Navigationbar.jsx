@@ -7,7 +7,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 
 const NavigationBar = () => {
   return (
-    <nav className="block sticky w-full h-auto top-0 bg-white text-black pt-4 z-10">
+    <nav className="block sticky w-full h-auto top-0 bg-white text-black pt-4 z-10 mb-5">
       <div className="px-12 flex justify-between items-center">
         <div className="text-lg font-bold flex-row">
           <Link className="flex flex-row items-center justify-between space-x-2" href="/" passHref>
@@ -28,7 +28,7 @@ const NavigationBar = () => {
           <Link href="/main/events" passHref>
             <span className="p-2 cursor-pointer">Events</span>
           </Link>
-          <Link href="/statistics" passHref>
+          <Link href="/main/chatbot" passHref>
             <span className="p-2 cursor-pointer">Chatbot</span>
           </Link>
           <Link href="/auth/login" passHref>

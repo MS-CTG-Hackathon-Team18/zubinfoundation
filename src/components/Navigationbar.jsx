@@ -22,10 +22,10 @@ const NavigationBar = () => {
         </div>
 
         <div className="text-black text-md font-sans flex items-center justify-between gap-4">
-          <Link href="/about" passHref>
+          <Link href="/" passHref>
             <span className="p-2 cursor-pointer">About</span>
           </Link>
-          <Link href="/" passHref>
+          <Link href="/main/events" passHref>
             <span className="p-2 cursor-pointer">Events</span>
           </Link>
           <Link href="/statistics" passHref>

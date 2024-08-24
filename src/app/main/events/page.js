@@ -3,10 +3,12 @@ import ImageTesting1 from "../../../../public/yoga.jpg";
 import ImageTesting2 from "../../../../public/football.jpg";
 import ImageTesting3 from "../../../../public/basketball.png";
 import Link from "next/link";
+import NavigationBar from "@/components/Navigationbar";
 
 const EventsPage = () => {
   return (
     <>
+      <NavigationBar />
       <div className="font-sans font-bold flex flex-col justify-between my-10 rounded-lg mx-20">
         <div className="mb-5">
           <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">

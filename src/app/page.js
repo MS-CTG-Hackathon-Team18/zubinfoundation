@@ -1,11 +1,11 @@
 import Navigationbar from "@/components/Navigationbar";
-import EventsPage from "./main/events/page";
+import IntroductionPage from "./introduction/page";
 
 export default function Home() {
   return (
     <>
       <Navigationbar />
-      <EventsPage />
+      <IntroductionPage />
     </>
   );
 }

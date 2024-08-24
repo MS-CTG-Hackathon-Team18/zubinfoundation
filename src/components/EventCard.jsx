@@ -10,8 +10,8 @@ import {
 import Image from "next/image";
 
 
-const EventCard = ({Picture, Title, DateTime, Location, Description}) => {
-  return ( 
+const EventCard = ({ Picture, Title, DateTime, Location, Description }) => {
+  return (
     <Card>
       <div className="m-8 flex justify-start align-middle relative w-72 h-48 overflow-hidden">
         <Image
@@ -24,18 +24,21 @@ const EventCard = ({Picture, Title, DateTime, Location, Description}) => {
 
       <div>
         <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
+          <CardTitle>{Title}</CardTitle>
+          <CardDescription>Event Description</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>Card Content</p>
+          <p>Event Content</p>
         </CardContent>
         <CardFooter>
-          <p>Card Footer</p>
+          <div >
+            <p>{Location}</p>
+            <p>{DateTime}</p>
+          </div>
         </CardFooter>
       </div>
     </Card>
   );
 }
- 
+
 export default EventCard;

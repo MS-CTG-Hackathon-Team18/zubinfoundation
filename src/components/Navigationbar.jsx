@@ -46,7 +46,7 @@ const NavigationBar = () => {
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="w-[150px] bg-white border border-gray-200 rounded-md shadow-lg">
-              <div className="p-2">
+              <div className="p-1">
                 <Link href="/main/settings" passHref>
                   <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">Settings</span>
                 </Link>

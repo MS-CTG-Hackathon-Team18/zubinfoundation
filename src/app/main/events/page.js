@@ -1,7 +1,8 @@
 import EventCard from "@/components/EventCard";
 import ImageTesting1 from "../../../../public/yoga.jpg";
 import ImageTesting2 from "../../../../public/football.jpg";
-import Navigationbar from "@/components/Navigationbar";
+import ImageTesting3 from "../../../../public/basketball.png";
+import Link from "next/link";
 
 const EventsPage = () => {
   return (
@@ -18,13 +19,37 @@ const EventsPage = () => {
 
         <div className="flex flex-wrap align-center justify-center">
           <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
+            <Link href="/main/settings" passHref>
+              {/* change link */}
+              <EventCard
+                Picture={ImageTesting1}
+                Title={"Yoga"}
+                Location={"Hong Kong"}
+                DateTime={"2025-02-01 3pm"}
+              />
+            </Link>
           </div>
           <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting2} />
+            <Link href="/main/settings" passHref>
+              {/* change link */}
+              <EventCard
+                Picture={ImageTesting2}
+                Title={"Footable"}
+                Location={"Singapore"}
+                DateTime={"2025-02-02 4pm"}
+              />
+            </Link>
           </div>
           <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
+            <Link href="/main/settings" passHref>
+              {/* change link */}
+              <EventCard
+                Picture={ImageTesting3}
+                Title={"Basketball"}
+                Location={"New York"}
+                DateTime={"2025-02-03 5pm"}
+              />
+            </Link>
           </div>
           {/* <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />

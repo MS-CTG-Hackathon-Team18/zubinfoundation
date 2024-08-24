@@ -54,8 +54,8 @@ const IntroductionPage = () => {
                     src={`/${program.toLowerCase().replaceAll(" ", "-")}.jpg`}
                     alt={program}
                     className="h-12 mx-auto"
-                    width={100}
-                    height={130}
+                    width={80}
+                    height={150}
                   />
                   <h3 className="mt-4 text-xl font-bold">{program}</h3>
                   <p className="mt-2 text-sm">

@@ -31,6 +31,9 @@ const NavigationBar = () => {
           <Link href="/main/chatbot" passHref>
             <span className="p-2 cursor-pointer">Chatbot</span>
           </Link>
+          <Link href="/main/dashboard" passHref>
+            <span className="p-2 cursor-pointer">Dashboard</span>
+          </Link>
           <Link href="/auth/login" passHref>
             <span className="p-2 cursor-pointer">Log In</span>
           </Link>
@@ -49,6 +52,9 @@ const NavigationBar = () => {
               <div className="p-1">
                 <Link href="/main/settings" passHref>
                   <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">Settings</span>
+                </Link>
+                <Link href="/main/settings" passHref>
+                  <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">My events</span>
                 </Link>
                 <Link href="/logout" passHref>
                   <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">Log Out</span>

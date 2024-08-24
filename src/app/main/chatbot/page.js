@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import NavigationBar from "@/components/NavigationBar";
+import Navigationbar from "@/components/Navigationbar";
 
 export default function ChatbotUI() {
   const [messages, setMessages] = useState([
@@ -27,7 +27,7 @@ export default function ChatbotUI() {
 
   return (
     <>
-      <NavigationBar />
+      <Navigationbar />
       <div
         className="flex justify-center items-center bg-gray-100"
         style={{ height: "calc(100vh - 80px)" }}
@@ -47,7 +47,7 @@ export default function ChatbotUI() {
                 <div
                   className={`inline-block p-2 rounded-lg ${
                     message.sender === "user"
-                      ? "bg-blue-500 text-white"
+                      ? "bg-black text-white"
                       : "bg-gray-200 text-black"
                   }`}
                 >

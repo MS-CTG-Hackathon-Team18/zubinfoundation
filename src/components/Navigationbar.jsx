@@ -29,7 +29,7 @@ const NavigationBar = () => {
             <span className="p-2 cursor-pointer">Events</span>
           </Link>
           <Link href="/statistics" passHref>
-            <span className="p-2 cursor-pointer">Statistics</span>
+            <span className="p-2 cursor-pointer">Chatbot</span>
           </Link>
           <Link href="/auth/login" passHref>
             <span className="p-2 cursor-pointer">Log In</span>

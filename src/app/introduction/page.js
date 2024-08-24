@@ -6,7 +6,7 @@ const IntroductionPage = () => {
   return (
     <div>
       <section
-        className="hero bg-cover bg-center text-white py-24 mt-10"
+        className="hero bg-cover bg-center text-white py-24 mt-5"
         style={{ backgroundImage: "url(../../healthy-hands.jpg)" }}
       >
         <div className="container mx-auto text-center">

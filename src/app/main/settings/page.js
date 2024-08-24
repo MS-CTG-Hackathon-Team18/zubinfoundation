@@ -46,15 +46,18 @@ export default function settings() {
   return (
     <div>
       <Navigationbar />
-      <div className="mt-10 mx-20">
-        <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
-          Settings
-        </h2>
-        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-400">
-          Manage your account settings and set e-mail preferences.
-        </h4>
-        <hr className="my-5 border-gray-300" />
-        <div className="flex flex-row">
+      <div className="mt-5 mx-10 border rounded-lg">
+        <div className="mx-10 my-5">
+          <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
+            Settings
+          </h2>
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-400">
+            Manage your account settings and set e-mail preferences.
+          </h4>
+          <hr className="my-5 border-gray-300" />
+        </div>
+
+        <div className="flex flex-row mx-10">
           <div>
             <NavigationMenu>
               <NavigationMenuList className="flex flex-col">

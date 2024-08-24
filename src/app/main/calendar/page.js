@@ -38,6 +38,7 @@ const CalendarPage = () => {
     description: "",
     venue: "",
     hasEndTime: false, // Control visibility of end time/date
+    recurrence: "none", // New state property for recurrence
   });
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showModal, setShowModal] = useState(false); // State to control add/edit modal visibility
@@ -59,41 +60,46 @@ const CalendarPage = () => {
       return;
     }
 
-    if (isEditMode && selectedEvent) {
-      // Editing an existing event
-      const updatedEvents = myEvents.map((event) =>
-        event.id === selectedEvent.id
-          ? {
-              ...event,
-              title: newEvent.name,
-              start: startDate,
-              end: endDate,
-              eventType: newEvent.eventType,
-              volunteersNeeded: newEvent.volunteersNeeded,
-              description: newEvent.description,
-              venue: newEvent.venue,
-            }
-          : event
-      );
-      setMyEvents(updatedEvents);
-    } else {
-      // Adding a new event
-      const id = myEvents.length ? myEvents[myEvents.length - 1].id + 1 : 1;
+    const eventsToAdd = [];
+    const id = myEvents.length ? myEvents[myEvents.length - 1].id + 1 : 1;
+    const recurringId = newEvent.recurrence === "none" ? null : id; // Assign a recurringId if it's a recurring event
 
-      setMyEvents([
-        ...myEvents,
-        {
-          id,
+    if (newEvent.recurrence === "none") {
+      // Single event
+      eventsToAdd.push({
+        id,
+        title: newEvent.name,
+        start: startDate,
+        end: endDate,
+        eventType: newEvent.eventType,
+        volunteersNeeded: newEvent.volunteersNeeded,
+        description: newEvent.description,
+        venue: newEvent.venue,
+        recurringId,
+      });
+    } else {
+      // Recurring events
+      let recurrenceCount = newEvent.recurrence === "weekly" ? 4 : 2; // Number of occurrences
+      for (let i = 0; i < recurrenceCount; i++) {
+        const eventStart = new Date(startDate);
+        const eventEnd = new Date(endDate);
+        eventStart.setDate(startDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2));
+        eventEnd.setDate(endDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2));
+        eventsToAdd.push({
+          id: id + i,
           title: newEvent.name,
-          start: startDate,
-          end: endDate,
+          start: eventStart,
+          end: eventEnd,
           eventType: newEvent.eventType,
           volunteersNeeded: newEvent.volunteersNeeded,
           description: newEvent.description,
           venue: newEvent.venue,
-        },
-      ]);
+          recurringId,
+        });
+      }
     }
+
+    setMyEvents([...myEvents, ...eventsToAdd]);
 
     setNewEvent({
       name: "",
@@ -105,14 +111,21 @@ const CalendarPage = () => {
       description: "",
       venue: "",
       hasEndTime: false,
+      recurrence: "none",
     });
 
     setShowModal(false); // Close the modal after adding/editing the event
     setIsEditMode(false); // Reset edit mode
   };
 
-  const handleDeleteEvent = (eventId) => {
-    setMyEvents(myEvents.filter((event) => event.id !== eventId));
+  const handleDeleteEvent = (eventId, deleteAll = false) => {
+    // If deleteAll is true, delete all events with the same recurringId
+    const eventToDelete = myEvents.find((event) => event.id === eventId);
+    if (deleteAll && eventToDelete.recurringId) {
+      setMyEvents(myEvents.filter((event) => event.recurringId !== eventToDelete.recurringId));
+    } else {
+      setMyEvents(myEvents.filter((event) => event.id !== eventId));
+    }
     setSelectedEvent(null); // Clear the selected event
     setShowEventDetailsModal(false); // Close the event details modal
   };
@@ -134,6 +147,7 @@ const CalendarPage = () => {
         description: selectedEvent.description,
         venue: selectedEvent.venue,
         hasEndTime: selectedEvent.start !== selectedEvent.end,
+        recurrence: "none", // Reset recurrence on edit (can be extended to handle recurrence edit)
       });
       setShowEventDetailsModal(false); // Close details modal
       setShowModal(true); // Open edit modal
@@ -348,6 +362,20 @@ const CalendarPage = () => {
                 className="w-full p-2 border border-gray-300 rounded"
               ></textarea>
               <br />
+              {/* New field for selecting recurrence pattern */}
+              <label className="block my-2">Recurrence:</label>
+              <select
+                value={newEvent.recurrence}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, recurrence: e.target.value })
+                }
+                className="w-full p-2 border border-gray-300 rounded"
+              >
+                <option value="none">None</option>
+                <option value="weekly">Weekly</option>
+                <option value="bi-weekly">Bi-weekly</option>
+              </select>
+              <br />
               <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">{isEditMode ? "Update Event" : "Add Event"}</button>
             </form>
           </div>
@@ -368,6 +396,14 @@ const CalendarPage = () => {
             <p>Venue: {selectedEvent.venue}</p>
             <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
             <p>Description: {selectedEvent.description}</p>
+            {selectedEvent.recurringId && (
+              <button
+                className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
+                onClick={() => handleDeleteEvent(selectedEvent.id, true)}
+              >
+                Delete All Instances
+              </button>
+            )}
             <button className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded" onClick={() => handleDeleteEvent(selectedEvent.id)}>
               Delete Event
             </button>

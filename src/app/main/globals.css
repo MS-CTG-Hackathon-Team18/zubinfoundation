@@ -256,13 +256,21 @@ button {
 }
 
 .accept {
-  background-color: hsl(var(--chart-1));
+  background-color: hsl(var(--chart-2)); /* Use a different chart color */
   color: #fff;
+}
+
+.accept:hover {
+  filter: brightness(0.9); /* Darken on hover */
 }
 
 .reject {
   background-color: hsl(var(--destructive));
   color: hsl(var(--destructive-foreground));
+}
+
+.reject:hover {
+  filter: brightness(0.9); /* Darken on hover */
 }
 
 hr {

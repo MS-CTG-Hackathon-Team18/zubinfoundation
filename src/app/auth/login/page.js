@@ -57,7 +57,7 @@ export default function SignInSide() {
           sm={5}
           md={7}
           sx={{
-            backgroundImage: 'url("../../../assets/zubin_foundation.png")',
+            backgroundImage: 'url("../../../zubin_foundation.png")',
             backgroundColor: (t) =>
               t.palette.mode === "light"
                 ? t.palette.grey[50]

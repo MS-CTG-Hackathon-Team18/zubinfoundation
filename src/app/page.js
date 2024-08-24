@@ -1,9 +1,9 @@
-import Sidebar from "@/components/ui/sidebar";
+import Navigationbar from "@/components/Navigationbar";
 
 export default function Home() {
   return (
     <div>
-      <Sidebar />
+      <Navigationbar />
       <div className="font-sans flex min-h-screen flex-col items-center justify-between p-12">
         TESTING
       </div>

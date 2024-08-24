@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../../public/logo-modified.png";
+import Logo from "../../public/logo-modified.png";
 
-export default function sidebar() {
+export default function Navigationbar() {
   return (
     <>
       <nav className=" bg-neutral-200 text-black p-4">
@@ -28,11 +28,14 @@ export default function sidebar() {
             <Link href="/about" passHref>
               <span className="p-2 cursor-pointer">About</span>
             </Link>
-            <Link href="/events" passHref>
-              <span className="p-2 cursor-pointer">Events</span>
+            <Link href="/main/events" passHref>
+            <span className="p-2 cursor-pointer">Events</span>
             </Link>
-            <Link href="/settings" passHref>
+            <Link href="/main/settings" passHref>
               <span className="p-2 cursor-pointer">Settings</span>
+            </Link>
+            <Link href="/statistics" passHref>
+              <span className="p-2 cursor-pointer">Statistics</span>
             </Link>
             <Link href="/auth/login" passHref>
               <span className="p-2 cursor-pointer">Log In</span>

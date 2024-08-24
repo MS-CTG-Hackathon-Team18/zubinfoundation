@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
-import Sidebar from "@/components/ui/sidebar";
+import Navigationbar from "@/components/Navigationbar";
 
 export default function settings() {
   const [activeSection, setActiveSection] = React.useState("profile");
@@ -45,7 +45,7 @@ export default function settings() {
 
   return (
     <div>
-      <Sidebar />
+      <Navigationbar />
       <div className="mt-10 mx-20">
         <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
           Settings

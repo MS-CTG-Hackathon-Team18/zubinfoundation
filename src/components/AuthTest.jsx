@@ -5,9 +5,9 @@ import { useState } from "react"
 import { supabase } from "@/lib/supabase"
 
 export function AuthTest() {
-  const [phone, setPhone] = useState();
-  const [password, setPassword] = useState();
-  const [loading, setLoading] = useState();
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function sendOtp() {
     setLoading(true);
@@ -15,7 +15,6 @@ export function AuthTest() {
       phone,
       options: { channel: 'whatsapp' },
     });
-    console.log(data);
 
     setLoading(false);
   };
@@ -24,14 +23,19 @@ export function AuthTest() {
     setLoading(true);
     const {
       data: { session },
-      error
+      error: verificationError
     } = await supabase.auth.verifyOtp({
       phone,
       token: password,
       type: "sms",
     })
 
-    console.log(session);
+    if (verificationError) return verificationError;
+
+    const {
+      data,
+      error: sessionError
+    } = await supabase.auth.setSession(session)
 
     setLoading(false);
   };

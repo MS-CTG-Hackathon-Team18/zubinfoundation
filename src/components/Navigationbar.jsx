@@ -31,6 +31,9 @@ const NavigationBar = () => {
           <Link href="/main/chatbot" passHref>
             <span className="p-2 cursor-pointer">Chatbot</span>
           </Link>
+          <Link href="https://wa.me/85263124327" passHref>
+            <span className="p-2 cursor-pointer">Whatsapp</span>
+          </Link>
           <Link href="/main/calendar" passHref>
             <span className="p-2 cursor-pointer">Admin</span>
           </Link>

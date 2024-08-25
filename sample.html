@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Send Question to FastAPI</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<h1>Send Question to FastAPI</h1>
+<button id="sendQuestionBtn">Send Question</button>
+
+<script>
+document.getElementById("sendQuestionBtn").addEventListener("click", async function() {
+    const postData = async (url = '', data = {}) => {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        return response.json();
+    };
+
+    const question = "Tell me something about Zubin";
+
+    // 发送POST请求给FastAPI
+    postData('http://localhost:8000/answer_question', { question: question })
+        .then(data => {
+            console.log(data);
+            alert("Response from FastAPI: " + JSON.stringify(data));
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error occurred. Please check the console for details.");
+        });
+});
+</script>
+</body>
+</html>

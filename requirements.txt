@@ -12,3 +12,4 @@ jq
 pypdf
 # faiss-gpu
 faiss-cpu
+fastapi

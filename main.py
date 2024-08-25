@@ -82,19 +82,48 @@ chain = RetrievalQA.from_chain_type(
 
 question = ""
 
-while question.lower() != "exit":
-    question = input("Please enter a question or type 'exit' to stop: ")
-    # Define the prompt
+# server of FASTAPI
+from fastapi import FastAPI, Request
+from starlette.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+
+# Add cors middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 这里可以根据需要更改为允许的域名列表
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+@app.post("/answer_question")
+async def answer_question(request: Request):
+    data = await request.json()
+    question = data['question']
+
     prompt = """
     1. Use the following pieces of context to answer the question at the end.
     2. If you don't know the answer, just say that "
     Thank you for your inquiry, we will contact the staff to further process your request" but don't make up an answer on your own.\n
     3. Keep the answer crisp and limited to 3,4 sentences.
     
-    Question:""" + question + """
-    Helpful Answer:"""
-    
-    if question.lower() != "exit":
-        print("Prompt: ", prompt)
-        result = chain.invoke({"query": prompt})
-        print(result['result'])
+    Question: {}
+    Helpful Answer:""".format(question)
+
+    result = chain.invoke({"query": prompt})
+
+    return JSONResponse(content={"result": result['result']})
+
+@app.options("/answer_question")
+async def options_answer_question(request: Request):
+    return JSONResponse(content={"Allow": "POST"}, status_code=200)
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, debug=True)

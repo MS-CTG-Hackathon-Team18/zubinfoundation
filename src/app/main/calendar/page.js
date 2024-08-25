@@ -7,7 +7,8 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "../globals.css";
+import "../../globals.css"; // Ensure this is correct path
+import "./calendar.css";
 import NavigationBar from "@/components/Navigationbar";
 import Dashbord from "../dashboard/page";
 import { Button } from "@/components/ui/button";
@@ -288,16 +289,18 @@ const CalendarPage = () => {
     <div>
       <NavigationBar />
       <div className="mx-10 border rounded-lg">
-        <h1 className="title-of-page">Event Calendar</h1>
-
-        <div className="flex justify-center my-2">
+        <div className="mx-10 my-5 flex justify-between">
+          <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
+            Event Calendar
+          </h2>
           <button
-            className="open-modal-btn bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-black text-white py-2 px-4 rounded "
             onClick={() => setShowModal(true)}
           >
             Add Event
           </button>
         </div>
+        {/* Center the "Add Event" button */}
         <hr className="my-5 border-gray-300" />
         {showModal && (
           <div className="modal-overlay">
@@ -306,7 +309,7 @@ const CalendarPage = () => {
                 className="close-modal-btn"
                 onClick={() => setShowModal(false)}
               >
-                Close
+                x
               </button>
               <form
                 onSubmit={isEditMode ? handleSaveEditEvent : handleAddEvent}
@@ -449,6 +452,43 @@ const CalendarPage = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 <br />
+                <textarea
+                  name="description"
+                  placeholder="Event Description"
+                  value={newEvent.description}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, description: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                ></textarea>
+                <br />
+
+                <div className="flex">
+                  <div className="mb-2 w-1/2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Training video
+                    </label>
+                    <input
+                      type="file"
+                      id="file_event"
+                      name="file_event"
+                      accept="image/png, image/jpeg .mp4"
+                    />
+                  </div>
+                  <div className="mb-2 w-1/2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Image of events
+                    </label>
+                    <input
+                      type="file"
+                      id="file_event"
+                      name="file_event"
+                      accept="image/png, image/jpeg"
+                    />
+                  </div>
+                </div>
+
+                {/* New field for selecting recurrence pattern */}
                 <label className="block my-2">Recurrence:</label>
                 <select
                   value={newEvent.recurrence}
@@ -480,14 +520,52 @@ const CalendarPage = () => {
                 className="close-modal-btn"
                 onClick={() => setShowEventDetailsModal(false)}
               >
-                Close
+                x
               </button>
-              <h2 className="text-xl font-bold">{selectedEvent.title}</h2>
-              <p>Type: {selectedEvent.eventType}</p>
-              <p>Start: {selectedEvent.start.toLocaleString()}</p>
-              <p>End: {selectedEvent.end.toLocaleString()}</p>
-              <p>Venue: {selectedEvent.venue}</p>
-              <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
+              <div className="p-6 bg-white shadow-lg rounded-lg">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  {selectedEvent.title}
+                </h2>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Type: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.eventType}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Start: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.start.toLocaleString()}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">End: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.end.toLocaleString()}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Venue: </span>
+                  <span className="text-gray-600">{selectedEvent.venue}</span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">
+                    Volunteers Needed:{" "}
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.volunteersNeeded}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">
+                    Description:{" "}
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.description}
+                  </span>
+                </div>
+              </div>
+
               {selectedEvent.recurringId && (
                 <button
                   className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
@@ -497,13 +575,13 @@ const CalendarPage = () => {
                 </button>
               )}
               <button
-                className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
+                className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded my-5"
                 onClick={() => handleDeleteEvent(selectedEvent.id)}
               >
                 Delete Event
               </button>
               <button
-                className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded"
+                className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded my-5"
                 onClick={handleEditEvent}
               >
                 Edit Event
@@ -540,20 +618,18 @@ const CalendarPage = () => {
       <div className="mt-5 mx-10 border rounded-lg">
         <h1 className="title-of-page">Review Applications</h1>
         {applications.map((application, index) => (
-          <div key={application.application_id} className="application ml-20">
-            <h2 className="details">Name: {application.user_id}</h2> {/* Replace user_id with actual name if available */}
+          <div key={index} className="application mx-10">
+            <h2 className="details">{application.name}</h2>
             <p className="details">Age: {application.age}</p>
-            <p className="details">Gender: {application.gender}</p>
-            <p className="details">Event ID: {application.event_id}</p>
-            <p className="details">Occupation: {application.occupation}</p>
-            <p className="details">Status: {application.status}</p>
-            <div className="buttons">
+            <p className="details">Sex: {application.sex}</p>
+            <p className="details">Event: {application.event}</p>
+            <p className="details">Skillset: {application.skillset}</p>
+            <div className="flex justify-end">
               <Button
-                onClick={() => handleApplicationStatusUpdate(application.application_id, 'approved')}
-                className="accept"
-                disabled={application.status === 'approved'}
+                onClick={() => handleAccept(index)}
+                className="bg-red-500 text-white mr-5"
               >
-                Approve
+                Accept
               </Button>
               <Button
                 onClick={() => handleApplicationStatusUpdate(application.application_id, 'rejected')}

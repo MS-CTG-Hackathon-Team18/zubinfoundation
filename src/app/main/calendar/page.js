@@ -554,7 +554,7 @@ const CalendarPage = () => {
             <div className="flex justify-end">
               <Button
                 onClick={() => handleAccept(index)}
-                className="bg-red-500 text-white mr-5 mb-5"
+                className="bg-red-500 text-white mr-5"
               >
                 Accept
               </Button>

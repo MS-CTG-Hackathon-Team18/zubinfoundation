@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, dateFnsLocalizer, Views } from "react-big-calendar";
 import format from "date-fns/format";
 import parse from "date-fns/parse";
@@ -7,10 +7,14 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "../globals.css"; // Ensure this is correct path
+import "../globals.css";
 import NavigationBar from "@/components/Navigationbar";
 import Dashbord from "../dashboard/page";
 import { Button } from "@/components/ui/button";
+import { getEventDetails, getApplications } from "@/app/api/db/get-actions"; // Import getApplications
+import { uploadEvent } from "@/app/api/db/post-actions";
+import { updateEvent, updateApplicationStatus } from "@/app/api/db/put-actions"; // Import updateApplicationStatus
+import { deleteEvent } from "@/app/api/db/delete-actions";
 
 const locales = {
   "en-US": enUS,
@@ -24,12 +28,8 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const initialEvents = [
-  // Sample events (commented out)
-];
-
 const CalendarPage = () => {
-  const [myEvents, setMyEvents] = useState(initialEvents);
+  const [myEvents, setMyEvents] = useState([]);
   const [newEvent, setNewEvent] = useState({
     name: "",
     eventDate: "",
@@ -37,19 +37,53 @@ const CalendarPage = () => {
     endTime: "",
     eventType: "women-girls",
     volunteersNeeded: 5,
-    description: "",
-    venue: "",
-    hasEndTime: false, // Control visibility of end time/date
-    recurrence: "none", // New state property for recurrence
+    venue: "happy valley",
+    budget: 1000,
+    imageUrl: "https://volunteer-training.com/youth-soccer-volunteera",
+    videoUrl: "https://volunteer-training.com/youth-soccer-volunteera",
+    hasEndTime: false,
+    recurrence: "none",
   });
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [showModal, setShowModal] = useState(false); // State to control add/edit modal visibility
-  const [showEventDetailsModal, setShowEventDetailsModal] = useState(false); // State to control event details modal visibility
-  const [isEditMode, setIsEditMode] = useState(false); // State to control edit mode
-  const [currentDate, setCurrentDate] = useState(new Date()); // State for the current date
-  const [currentView, setCurrentView] = useState(Views.MONTH); // State for the current view
+  const [showModal, setShowModal] = useState(false);
+  const [showEventDetailsModal, setShowEventDetailsModal] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState(Views.MONTH);
+  const [applications, setApplications] = useState([]); // State for applications
 
-  const handleAddEvent = (e) => {
+  // Fetch events and applications from the database
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const eventsData = await getEventDetails();
+      const formattedEvents = eventsData.data.map((event) => ({
+        id: event.event_id,
+        title: event.event_name,
+        start: new Date(event.event_date),
+        end: new Date(event.end_time || event.event_date),
+        eventType: event.category,
+        volunteersNeeded: event.quota,
+        venue: event.location,
+        imageUrl: event.image_url,
+        videoUrl: event.training_url,
+      }));
+      setMyEvents(formattedEvents);
+    };
+
+    const fetchApplications = async () => {
+      const applicationsData = await getApplications();
+      if (applicationsData.success) {
+        setApplications(applicationsData.data);
+      } else {
+        console.error("Failed to fetch applications:", applicationsData.error);
+      }
+    };
+
+    fetchEvents();
+    fetchApplications();
+  }, []);
+
+  const handleAddEvent = async (e) => {
     e.preventDefault();
 
     const startDate = new Date(newEvent.eventDate + " " + newEvent.startTime);
@@ -62,132 +96,176 @@ const CalendarPage = () => {
       return;
     }
 
-    const eventsToAdd = [];
-    const id = myEvents.length ? myEvents[myEvents.length - 1].id + 1 : 1;
-    const recurringId = newEvent.recurrence === "none" ? null : id; // Assign a recurringId if it's a recurring event
+    const eventData = {
+      event_name: newEvent.name,
+      event_date: startDate.toISOString(),
+      end_time: endDate.toISOString(),
+      category: newEvent.eventType,
+      location: newEvent.venue,
+      quota: newEvent.volunteersNeeded,
+      budget: newEvent.budget || 0,
+      image_url: newEvent.imageUrl,
+      training_url: newEvent.videoUrl,
+    };
 
-    if (newEvent.recurrence === "none") {
-      // Single event
-      eventsToAdd.push({
-        id,
-        title: newEvent.name,
-        start: startDate,
-        end: endDate,
-        eventType: newEvent.eventType,
-        volunteersNeeded: newEvent.volunteersNeeded,
-        description: newEvent.description,
-        venue: newEvent.venue,
-        recurringId,
+    const response = await uploadEvent(eventData, newEvent.imageUrl, 'png', newEvent.videoUrl, 'mp4');
+
+    if (response.success) {
+      const newEventId = myEvents.length ? myEvents[myEvents.length - 1].id + 1 : 1;
+      setMyEvents([
+        ...myEvents,
+        {
+          ...eventData,
+          id: newEventId,
+          start: startDate,
+          end: endDate,
+        },
+      ]);
+
+      setNewEvent({
+        name: "",
+        eventDate: "",
+        startTime: "",
+        endTime: "",
+        eventType: "women-girls",
+        volunteersNeeded: 5,
+        venue: "happy valley",
+        budget: 1000,
+        imageUrl: "https://volunteer-training.com/youth-soccer-volunteera",
+        videoUrl: "https://volunteer-training.com/youth-soccer-volunteera",
+        hasEndTime: false,
+        recurrence: "none",
       });
+
+      setShowModal(false);
     } else {
-      // Recurring events
-      let recurrenceCount = newEvent.recurrence === "weekly" ? 4 : 2; // Number of occurrences
-      for (let i = 0; i < recurrenceCount; i++) {
-        const eventStart = new Date(startDate);
-        const eventEnd = new Date(endDate);
-        eventStart.setDate(
-          startDate.getDate() +
-            i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2)
-        );
-        eventEnd.setDate(
-          endDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2)
-        );
-        eventsToAdd.push({
-          id: id + i,
-          title: newEvent.name,
-          start: eventStart,
-          end: eventEnd,
-          eventType: newEvent.eventType,
-          volunteersNeeded: newEvent.volunteersNeeded,
-          description: newEvent.description,
-          venue: newEvent.venue,
-          recurringId,
-        });
-      }
+      console.error("Failed to upload the event:", response.error);
+      alert("Failed to upload the event. Check console for more details.");
     }
-
-    setMyEvents([...myEvents, ...eventsToAdd]);
-
-    setNewEvent({
-      name: "",
-      eventDate: "",
-      startTime: "",
-      endTime: "",
-      eventType: "women-girls",
-      volunteersNeeded: 5,
-      description: "",
-      venue: "",
-      hasEndTime: false,
-      recurrence: "none",
-    });
-
-    setShowModal(false); // Close the modal after adding/editing the event
-    setIsEditMode(false); // Reset edit mode
   };
 
-  const handleDeleteEvent = (eventId, deleteAll = false) => {
-    // If deleteAll is true, delete all events with the same recurringId
-    const eventToDelete = myEvents.find((event) => event.id === eventId);
-    if (deleteAll && eventToDelete.recurringId) {
-      setMyEvents(
-        myEvents.filter(
-          (event) => event.recurringId !== eventToDelete.recurringId
-        )
-      );
-    } else {
+  const handleDeleteEvent = async (eventId, deleteAll = false) => {
+    const confirmation = window.confirm("Are you sure you want to delete this event?");
+    if (!confirmation) return;
+
+    const response = await deleteEvent(eventId);
+
+    if (response.success) {
       setMyEvents(myEvents.filter((event) => event.id !== eventId));
+      setSelectedEvent(null);
+      setShowEventDetailsModal(false);
+      alert("Event deleted successfully.");
+    } else {
+      console.error("Failed to delete the event:", response.error);
+      alert("Failed to delete the event. Check console for more details.");
     }
-    setSelectedEvent(null); // Clear the selected event
-    setShowEventDetailsModal(false); // Close the event details modal
   };
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
-    setShowEventDetailsModal(true); // Open the event details modal
+    setShowEventDetailsModal(true);
   };
 
-  const handleEditEvent = () => {
+  const handleEditEvent = async () => {
     if (selectedEvent) {
       setNewEvent({
         name: selectedEvent.title,
-        eventDate: selectedEvent.start.toISOString().split("T")[0], // Extract date part
-        startTime: selectedEvent.start.toTimeString().slice(0, 5), // Extract time part
-        endTime: selectedEvent.end.toTimeString().slice(0, 5), // Extract time part
+        eventDate: selectedEvent.start.toISOString().split("T")[0],
+        startTime: selectedEvent.start.toTimeString().slice(0, 5),
+        endTime: selectedEvent.end.toTimeString().slice(0, 5),
         eventType: selectedEvent.eventType,
         volunteersNeeded: selectedEvent.volunteersNeeded,
-        description: selectedEvent.description,
         venue: selectedEvent.venue,
+        imageUrl: selectedEvent.imageUrl || "",
+        videoUrl: selectedEvent.videoUrl || "",
         hasEndTime: selectedEvent.start !== selectedEvent.end,
-        recurrence: "none", // Reset recurrence on edit (can be extended to handle recurrence edit)
+        recurrence: "none",
       });
-      setShowEventDetailsModal(false); // Close details modal
-      setShowModal(true); // Open edit modal
-      setIsEditMode(true); // Enable edit mode
+      setShowEventDetailsModal(false);
+      setShowModal(true);
+      setIsEditMode(true);
     }
   };
 
-  // Color-coding events based on type
+  const handleSaveEditEvent = async () => {
+    if (selectedEvent) {
+      const updatedEvent = {
+        event_name: newEvent.name,
+        event_date: new Date(newEvent.eventDate + " " + newEvent.startTime).toISOString(),
+        end_time: newEvent.hasEndTime ? new Date(newEvent.eventDate + " " + newEvent.endTime).toISOString() : null,
+        category: newEvent.eventType,
+        location: newEvent.venue,
+        quota: newEvent.volunteersNeeded,
+        budget: newEvent.budget || 0,
+        image_url: newEvent.imageUrl,
+        training_url: newEvent.videoUrl,
+      };
+
+      const response = await updateEvent(selectedEvent.id, updatedEvent);
+
+      if (response.success) {
+        const updatedEvents = myEvents.map((event) =>
+          event.id === selectedEvent.id
+            ? {
+                ...event,
+                title: newEvent.name,
+                start: new Date(newEvent.eventDate + " " + newEvent.startTime),
+                end: newEvent.hasEndTime
+                  ? new Date(newEvent.eventDate + " " + newEvent.endTime)
+                  : new Date(newEvent.eventDate + " " + newEvent.startTime),
+                eventType: newEvent.eventType,
+                volunteersNeeded: newEvent.volunteersNeeded,
+                venue: newEvent.venue,
+              }
+            : event
+        );
+
+        setMyEvents(updatedEvents);
+        setShowModal(false);
+        setIsEditMode(false);
+      } else {
+        console.error("Failed to update the event:", response.error);
+      }
+    }
+  };
+
+  const handleApplicationStatusUpdate = async (applicationId, newStatus) => {
+    const response = await updateApplicationStatus(applicationId, newStatus);
+
+    if (response.success) {
+      setApplications(applications.map(application => 
+        application.application_id === applicationId
+          ? { ...application, status: newStatus }
+          : application
+      ));
+      alert(`Application status updated to ${newStatus}.`);
+    } else {
+      console.error("Failed to update application status:", response.error);
+      alert("Failed to update application status. Check console for more details.");
+    }
+  };
+
   const eventStyleGetter = (event) => {
-    let backgroundColor = "#3174ad"; // Default color
+    let backgroundColor = "#3174ad";
 
     switch (event.eventType) {
       case "women-girls":
-        backgroundColor = "#ff7f50"; // Coral
+        backgroundColor = "#ff7f50";
         break;
       case "economic-opportunity":
-        backgroundColor = "#32cd32"; // Lime Green
+        backgroundColor = "#32cd32";
         break;
       case "family-resources":
-        backgroundColor = "#ffa500"; // Orange
+        backgroundColor = "#ffa500";
         break;
       case "mental-health":
-        backgroundColor = "#8a2be2"; // Blue Violet
+        backgroundColor = "#8a2be2";
         break;
       case "emergency-relief":
-        backgroundColor = "#ff4500"; // Orange Red
+        backgroundColor = "#ff4500";
         break;
       default:
-        backgroundColor = "#3174ad"; // Default color
+        backgroundColor = "#3174ad";
     }
 
     return {
@@ -198,44 +276,6 @@ const CalendarPage = () => {
     };
   };
 
-  // Application state and functions
-  const [applications, setApplications] = useState([
-    {
-      name: "John Doe",
-      age: 30,
-      sex: "Male",
-      event: "Tech Conference",
-      skillset: "JavaScript, React, Node.js",
-    },
-    {
-      name: "Jane Smith",
-      age: 25,
-      sex: "Female",
-      event: "Design Workshop",
-      skillset: "UI/UX Design, Adobe Creative Suite",
-    },
-    {
-      name: "Alex Johnson",
-      age: 28,
-      sex: "Non-binary",
-      event: "Startup Pitch Competition",
-      skillset: "Business Development, Marketing",
-    },
-  ]);
-
-  const handleAccept = (index) => {
-    const updatedApplications = applications.filter((_, idx) => idx !== index);
-    setApplications(updatedApplications);
-    alert(`Application of ${applications[index].name} accepted!`);
-  };
-
-  const handleReject = (index) => {
-    const updatedApplications = applications.filter((_, idx) => idx !== index);
-    setApplications(updatedApplications);
-    alert(`Application of ${applications[index].name} rejected!`);
-  };
-
-  // Handlers for calendar navigation and view changes
   const handleNavigate = (date) => {
     setCurrentDate(date);
   };
@@ -250,7 +290,6 @@ const CalendarPage = () => {
       <div className="mx-10 border rounded-lg">
         <h1 className="title-of-page">Event Calendar</h1>
 
-        {/* Center the "Add Event" button */}
         <div className="flex justify-center my-2">
           <button
             className="open-modal-btn bg-blue-500 text-white py-2 px-4 rounded"
@@ -260,7 +299,6 @@ const CalendarPage = () => {
           </button>
         </div>
         <hr className="my-5 border-gray-300" />
-        {/* Modal for adding/editing events */}
         {showModal && (
           <div className="modal-overlay">
             <div className="modal">
@@ -270,7 +308,10 @@ const CalendarPage = () => {
               >
                 Close
               </button>
-              <form onSubmit={handleAddEvent} className="form-container">
+              <form
+                onSubmit={isEditMode ? handleSaveEditEvent : handleAddEvent}
+                className="form-container"
+              >
                 <input
                   type="text"
                   name="name"
@@ -344,6 +385,39 @@ const CalendarPage = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 <br />
+                <input
+                  type="number"
+                  name="budget"
+                  placeholder="Budget"
+                  value={newEvent.budget}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, budget: parseFloat(e.target.value) })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <input
+                  type="text"
+                  name="imageUrl"
+                  placeholder="Image URL"
+                  value={newEvent.imageUrl}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, imageUrl: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <input
+                  type="text"
+                  name="videoUrl"
+                  placeholder="Video URL"
+                  value={newEvent.videoUrl}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, videoUrl: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
                 <select
                   value={newEvent.eventType}
                   onChange={(e) =>
@@ -375,17 +449,6 @@ const CalendarPage = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 <br />
-                <textarea
-                  name="description"
-                  placeholder="Event Description"
-                  value={newEvent.description}
-                  onChange={(e) =>
-                    setNewEvent({ ...newEvent, description: e.target.value })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded"
-                ></textarea>
-                <br />
-                {/* New field for selecting recurrence pattern */}
                 <label className="block my-2">Recurrence:</label>
                 <select
                   value={newEvent.recurrence}
@@ -410,7 +473,6 @@ const CalendarPage = () => {
           </div>
         )}
 
-        {/* Modal for displaying event details */}
         {showEventDetailsModal && selectedEvent && (
           <div className="modal-overlay">
             <div className="modal">
@@ -426,7 +488,6 @@ const CalendarPage = () => {
               <p>End: {selectedEvent.end.toLocaleString()}</p>
               <p>Venue: {selectedEvent.venue}</p>
               <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
-              <p>Description: {selectedEvent.description}</p>
               {selectedEvent.recurringId && (
                 <button
                   className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
@@ -456,41 +517,49 @@ const CalendarPage = () => {
           events={myEvents}
           startAccessor="start"
           endAccessor="end"
-          titleAccessor="title" // Use title accessor for displaying event name
+          titleAccessor="title"
           className="h-[600px] mx-[50px] my-[30px]"
-          views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]} // Enable multiple views
-          defaultView={Views.MONTH} // Set the default view
-          step={60} // Set the time step in minutes
-          showMultiDayTimes // Show times for multi-day events
-          toolbar // Enable the toolbar
-          date={currentDate} // Bind currentDate to the calendar
-          view={currentView} // Bind currentView to the calendar
-          onNavigate={handleNavigate} // Handle navigation
-          onView={handleViewChange} // Handle view changes
+          views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]}
+          defaultView={Views.MONTH}
+          step={60}
+          showMultiDayTimes
+          toolbar
+          date={currentDate}
+          view={currentView}
+          onNavigate={handleNavigate}
+          onView={handleViewChange}
           onSelectEvent={handleSelectEvent}
-          eventPropGetter={eventStyleGetter} // Apply color coding
-          popup={true} // Enables the "see more" popup
+          eventPropGetter={eventStyleGetter}
+          popup={true}
           components={{
-            event: ({ event }) => <span>{event.title}</span>, // Use a simple event display
+            event: ({ event }) => <span>{event.title}</span>,
           }}
         />
       </div>
       <Dashbord />
-      {/* Review Applications Section */}
       <div className="mt-5 mx-10 border rounded-lg">
         <h1 className="title-of-page">Review Applications</h1>
         {applications.map((application, index) => (
-          <div key={index} className="application ml-20">
-            <h2 className="details">{application.name}</h2>
+          <div key={application.application_id} className="application ml-20">
+            <h2 className="details">Name: {application.user_id}</h2> {/* Replace user_id with actual name if available */}
             <p className="details">Age: {application.age}</p>
-            <p className="details">Sex: {application.sex}</p>
-            <p className="details">Event: {application.event}</p>
-            <p className="details">Skillset: {application.skillset}</p>
+            <p className="details">Gender: {application.gender}</p>
+            <p className="details">Event ID: {application.event_id}</p>
+            <p className="details">Occupation: {application.occupation}</p>
+            <p className="details">Status: {application.status}</p>
             <div className="buttons">
-              <Button onClick={() => handleAccept(index)} className="accept">
-                Accept
+              <Button
+                onClick={() => handleApplicationStatusUpdate(application.application_id, 'approved')}
+                className="accept"
+                disabled={application.status === 'approved'}
+              >
+                Approve
               </Button>
-              <Button onClick={() => handleReject(index)} className="reject">
+              <Button
+                onClick={() => handleApplicationStatusUpdate(application.application_id, 'rejected')}
+                className="reject"
+                disabled={application.status === 'rejected'}
+              >
                 Reject
               </Button>
             </div>

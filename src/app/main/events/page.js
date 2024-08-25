@@ -4,12 +4,16 @@ import ImageTesting2 from "../../../../public/football.jpg";
 import ImageTesting3 from "../../../../public/basketball.png";
 import Link from "next/link";
 import NavigationBar from "@/components/Navigationbar";
+import { getEventDetails } from "@/app/api/db/get-actions";
+
+const eventsData = await getEventDetails();
+console.log('eventsData', eventsData);
 
 const EventsPage = () => {
   return (
     <>
       <NavigationBar />
-      <div className="font-sans font-bold flex flex-col justify-between rounded-lg mx-10 border rounded-lg">
+      <div className="font-sans font-bold flex flex-col justify-between rounded-lg mx-10 border">
         <div className="mx-10 my-5">
           <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
             Events
@@ -20,59 +24,23 @@ const EventsPage = () => {
           <hr className="my-5 border-gray-300" />
         </div>
 
-        <div className="flex flex-wrap align-center justify-center mb-10">
-          <div className="my-3 mx-5">
-            <Link href="/main/events/event-details" passHref>
-              {/* change link */}
-              <EventCard
-                Picture={ImageTesting1}
-                Title={"Yoga"}
-                Location={"Hong Kong"}
-                DateTime={"2025-02-01 3pm"}
-              />
-            </Link>
+        <div className="flex flex-wrap align-center justify-center mb-10 gap-12">
+          <div className="flex flex-wrap align-center justify-center mb-10">
+            {eventsData.data.map((event) => (
+              <div key={event.event_id} className="my-3 mx-5">
+                <Link href={`/main/events/event-details/${event.event_id}`} passHref>
+                  <EventCard
+                    Picture={event.image_url}
+                    Title={event.event_name}
+                    Location={event.location}
+                    DateTime={event.event_date.slice(0, 10)}
+                  />
+                </Link>
+              </div>
+            ))}
           </div>
-          <div className="my-3 mx-5">
-            <Link href="/main/events/event-details" passHref>
-              {/* change link */}
-              <EventCard
-                Picture={ImageTesting2}
-                Title={"Football"}
-                Location={"Singapore"}
-                DateTime={"2025-02-02 4pm"}
-              />
-            </Link>
-          </div>
-          <div className="my-3 mx-5">
-            <Link href="/main/events/event-details" passHref>
-              {/* change link */}
-              <EventCard
-                Picture={ImageTesting3}
-                Title={"Basketball"}
-                Location={"New York"}
-                DateTime={"2025-02-03 5pm"}
-              />
-            </Link>
-          </div>
-          {/* <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
-          </div> */}
         </div>
+        
       </div>
     </>
   );

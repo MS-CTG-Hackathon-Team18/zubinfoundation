@@ -31,7 +31,7 @@ from langchain.chains import RetrievalQA
 # load .env
 load_dotenv()
 OPENAI_API_KEY = os.environ['OPENAI_API_KEY']
-os.environ['LANGCHAIN_TRACING_V2'] = 'true'
+os.environ['LANGCHAIN_TRACING_V2'] = 'false'
 os.environ['LANGCHAIN_ENDPOINT'] = 'https://api.smith.langchain.com'
 os.environ['LANGCHAIN_PROJECT'] = "AI assistant for Zubin"
 
@@ -126,4 +126,4 @@ async def options_answer_question(request: Request):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, debug=True)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -28,7 +28,9 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#000000", // Change primary color to black
+      main: "#404040",
+      secondary: "#fcd34d",
+      third: "#fde68a",
     },
   },
 });
@@ -88,7 +90,9 @@ export default function SignInSide() {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+            <Avatar
+              sx={{ m: 1, bgcolor: "primary.secondary", color: "primary.main" }}
+            >
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -153,7 +157,16 @@ export default function SignInSide() {
                 type="button"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 1 }}
+                sx={{
+                  mt: 3,
+                  mb: 1,
+                  bgcolor: "primary.secondary",
+                  color: "primary.main",
+                  "&:hover": {
+                    bgcolor: "primary.third", // Same background color on hover
+                    boxShadow: "none", // Remove any shadow effects
+                  },
+                }}
                 onClick={handleSendVerificationCode}
                 disabled={codeSent}
               >
@@ -176,7 +189,10 @@ export default function SignInSide() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 1, mb: 2 }}
+                sx={{
+                  mt: 1,
+                  mb: 2,
+                }}
               >
                 Sign In
               </Button>

@@ -394,7 +394,6 @@ const CalendarPage = () => {
                     />
                   </>
                 )}
-                <br />
                 <input
                   type="text"
                   name="venue"
@@ -442,37 +441,38 @@ const CalendarPage = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 />
                 <br />
-                <select
-                  value={newEvent.eventType}
-                  onChange={(e) =>
-                    setNewEvent({ ...newEvent, eventType: e.target.value })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="women-girls">Women & Girls</option>
-                  <option value="economic-opportunity">
-                    Economic Opportunity
-                  </option>
-                  <option value="family-resources">Family Resources</option>
-                  <option value="mental-health">Mental Health</option>
-                  <option value="emergency-relief">Emergency Relief</option>
-                </select>
-                <br />
-                <input
-                  type="number"
-                  name="volunteersNeeded"
-                  placeholder="Volunteers Needed"
-                  value={newEvent.volunteersNeeded}
-                  onChange={(e) =>
-                    setNewEvent({
-                      ...newEvent,
-                      volunteersNeeded: parseInt(e.target.value),
-                    })
-                  }
-                  required
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-                <br />
+                <div className="flex">
+                  <select
+                    value={newEvent.eventType}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, eventType: e.target.value })
+                    }
+                    className="p-2 border border-gray-300 rounded mr-10"
+                  >
+                    <option value="women-girls">Women & Girls</option>
+                    <option value="economic-opportunity">
+                      Economic Opportunity
+                    </option>
+                    <option value="family-resources">Family Resources</option>
+                    <option value="mental-health">Mental Health</option>
+                    <option value="emergency-relief">Emergency Relief</option>
+                  </select>
+                  <input
+                    type="number"
+                    name="volunteersNeeded"
+                    placeholder="Volunteers Needed"
+                    value={newEvent.volunteersNeeded}
+                    onChange={(e) =>
+                      setNewEvent({
+                        ...newEvent,
+                        volunteersNeeded: parseInt(e.target.value),
+                      })
+                    }
+                    required
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+
                 <textarea
                   name="description"
                   placeholder="Event Description"
@@ -484,7 +484,7 @@ const CalendarPage = () => {
                 ></textarea>
                 <br />
 
-                <div className="flex">
+                {/* <div className="flex">
                   <div className="mb-2 w-1/2">
                     <label className="block text-sm font-medium text-gray-700">
                       Training video
@@ -507,21 +507,24 @@ const CalendarPage = () => {
                       accept="image/png, image/jpeg"
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* New field for selecting recurrence pattern */}
-                <label className="block my-2">Recurrence:</label>
-                <select
-                  value={newEvent.recurrence}
-                  onChange={(e) =>
-                    setNewEvent({ ...newEvent, recurrence: e.target.value })
-                  }
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="none">None</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="bi-weekly">Bi-weekly</option>
-                </select>
+                <div className="flex">
+                  <label className="block my-2 mr-5">Recurrence:</label>
+                  <select
+                    value={newEvent.recurrence}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, recurrence: e.target.value })
+                    }
+                    className="p-2 border border-gray-300 rounded"
+                  >
+                    <option value="none">None</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="bi-weekly">Bi-weekly</option>
+                  </select>
+                </div>
+
                 <br />
                 <button
                   type="submit"

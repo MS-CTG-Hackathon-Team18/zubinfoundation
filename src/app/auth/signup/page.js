@@ -48,7 +48,9 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#000000", // Change primary color to black
+      main: "#404040",
+      secondary: "#fcd34d",
+      third: "#fde68a",
     },
   },
 });
@@ -91,7 +93,9 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+          <Avatar
+            sx={{ m: 1, bgcolor: "primary.secondary", color: "primary.main" }}
+          >
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -177,7 +181,16 @@ export default function SignUp() {
               type="button"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 1 }}
+              sx={{
+                mt: 3,
+                mb: 1,
+                bgcolor: "primary.secondary",
+                color: "primary.main",
+                "&:hover": {
+                  bgcolor: "primary.third", // Same background color on hover
+                  boxShadow: "none", // Remove any shadow effects
+                },
+              }}
               onClick={handleSendVerificationCode}
               disabled={codeSent}
             >

@@ -109,10 +109,18 @@ const CalendarPage = () => {
       training_url: newEvent.videoUrl,
     };
 
-    const response = await uploadEvent(eventData, newEvent.imageUrl, 'png', newEvent.videoUrl, 'mp4');
+    const response = await uploadEvent(
+      eventData,
+      newEvent.imageUrl,
+      "png",
+      newEvent.videoUrl,
+      "mp4"
+    );
 
     if (response.success) {
-      const newEventId = myEvents.length ? myEvents[myEvents.length - 1].id + 1 : 1;
+      const newEventId = myEvents.length
+        ? myEvents[myEvents.length - 1].id + 1
+        : 1;
       setMyEvents([
         ...myEvents,
         {
@@ -146,7 +154,9 @@ const CalendarPage = () => {
   };
 
   const handleDeleteEvent = async (eventId, deleteAll = false) => {
-    const confirmation = window.confirm("Are you sure you want to delete this event?");
+    const confirmation = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
     if (!confirmation) return;
 
     const response = await deleteEvent(eventId);
@@ -192,8 +202,12 @@ const CalendarPage = () => {
     if (selectedEvent) {
       const updatedEvent = {
         event_name: newEvent.name,
-        event_date: new Date(newEvent.eventDate + " " + newEvent.startTime).toISOString(),
-        end_time: newEvent.hasEndTime ? new Date(newEvent.eventDate + " " + newEvent.endTime).toISOString() : null,
+        event_date: new Date(
+          newEvent.eventDate + " " + newEvent.startTime
+        ).toISOString(),
+        end_time: newEvent.hasEndTime
+          ? new Date(newEvent.eventDate + " " + newEvent.endTime).toISOString()
+          : null,
         category: newEvent.eventType,
         location: newEvent.venue,
         quota: newEvent.volunteersNeeded,
@@ -234,15 +248,19 @@ const CalendarPage = () => {
     const response = await updateApplicationStatus(applicationId, newStatus);
 
     if (response.success) {
-      setApplications(applications.map(application => 
-        application.application_id === applicationId
-          ? { ...application, status: newStatus }
-          : application
-      ));
+      setApplications(
+        applications.map((application) =>
+          application.application_id === applicationId
+            ? { ...application, status: newStatus }
+            : application
+        )
+      );
       alert(`Application status updated to ${newStatus}.`);
     } else {
       console.error("Failed to update application status:", response.error);
-      alert("Failed to update application status. Check console for more details.");
+      alert(
+        "Failed to update application status. Check console for more details."
+      );
     }
   };
 
@@ -394,7 +412,10 @@ const CalendarPage = () => {
                   placeholder="Budget"
                   value={newEvent.budget}
                   onChange={(e) =>
-                    setNewEvent({ ...newEvent, budget: parseFloat(e.target.value) })
+                    setNewEvent({
+                      ...newEvent,
+                      budget: parseFloat(e.target.value),
+                    })
                   }
                   className="w-full p-2 border border-gray-300 rounded"
                 />
@@ -615,7 +636,7 @@ const CalendarPage = () => {
         />
       </div>
       <Dashbord />
-      <div className="mt-5 mx-10 border rounded-lg">
+      {/* <div className="mt-5 mx-10 border rounded-lg">
         <h1 className="title-of-page">Review Applications</h1>
         {applications.map((application, index) => (
           <div key={index} className="application mx-10">
@@ -642,7 +663,7 @@ const CalendarPage = () => {
             <hr />
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -35,18 +35,7 @@ function Copyright(props) {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 
-// const defaultTheme = createTheme();
-
-const theme = createTheme({
-  typography: {
-    fontFamily: 'font-sans, sans-serif',
-  },
-  palette: {
-    primary: {
-      main: '#000000', // Change primary color to black
-    },
-  },
-});
+const defaultTheme = createTheme();
 
 export default function SignUp() {
   const handleSubmit = (event) => {
@@ -59,7 +48,7 @@ export default function SignUp() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -70,7 +59,7 @@ export default function SignUp() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

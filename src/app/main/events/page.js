@@ -17,7 +17,7 @@ const EventsPage = () => {
           </h4>
         </div>
 
-        <div className="flex flex-wrap align-center">
+        <div className="flex flex-wrap align-center justify-center">
           <div className="my-3 mx-5">
             <EventCard Picture={ImageTesting1} />
           </div>

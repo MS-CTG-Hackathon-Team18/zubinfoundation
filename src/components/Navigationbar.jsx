@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 
 const NavigationBar = () => {
   return ( 
-    <nav className="block sticky w-full h-auto top-0 bg-white text-black pt-4 z-10">
+    <nav className="block sticky w-full h-auto top-0 bg-white text-black py-4 z-10">
       <div className="px-12 flex justify-between items-center">
 
         <div className="text-lg font-bold flex-row">

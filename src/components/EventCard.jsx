@@ -12,8 +12,8 @@ import Image from "next/image";
 
 const EventCard = ({Picture, Title, DateTime, Location, Description}) => {
   return ( 
-    <Card>
-      <div className="m-8 flex justify-start align-middle relative w-72 h-48 overflow-hidden">
+    <Card className="hover:cursor-pointer">
+      <div className="m-8 flex justify-start align-middle relative w-64 h-48 overflow-hidden">
         <Image
           src={Picture}
           alt="Picture of the author"

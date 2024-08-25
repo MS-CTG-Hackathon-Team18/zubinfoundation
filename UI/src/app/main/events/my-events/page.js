@@ -30,7 +30,7 @@ const MyEvents = () => {
             <div className="my-3 mx-5">
               <EventCard
                 Picture={ImageTesting2}
-                Title={"Footable"}
+                Title={"Football"}
                 Location={"Singapore"}
                 DateTime={"2025-02-02 4pm"}
               />

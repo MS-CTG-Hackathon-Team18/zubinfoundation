@@ -31,6 +31,8 @@ export function AuthTest() {
       type: "sms",
     })
 
+    console.log(session);
+
     setLoading(false);
   };
 

@@ -7,28 +7,29 @@ import EventCard from "@/components/EventCard";
 const MyEvents = () => {
   return (
     <>
-      <NavigationBar/>
-      <div className="font-sans font-bold flex flex-col justify-between my-10 rounded-lg mx-20">
-        <div className="mb-5">
-          <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
-            My Events
-          </h2>
-          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-400">
-            Collection of your registered events
-          </h4>
-        </div>
-        <div className="flex flex-wrap align-center justify-center">
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting1} />
+      <NavigationBar />
+      <div className="mt-5 mx-10 border rounded-lg">
+        <div className="font-sans font-bold flex flex-col justify-between my-10 rounded-lg mx-10">
+          <div className="mb-5">
+            <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
+              My Events
+            </h2>
+            <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-400">
+              Collection of your registered events
+            </h4>
           </div>
-          <div className="my-3 mx-5">
-            <EventCard Picture={ImageTesting2} />
+          <div className="flex flex-wrap align-center justify-center">
+            <div className="my-3 mx-5">
+              <EventCard Picture={ImageTesting1} />
+            </div>
+            <div className="my-3 mx-5">
+              <EventCard Picture={ImageTesting2} />
+            </div>
           </div>
         </div>
       </div>
     </>
-
   );
-}
- 
+};
+
 export default MyEvents;

@@ -9,7 +9,7 @@ const EventsPage = () => {
   return (
     <>
       <NavigationBar />
-      <div className="font-sans font-bold flex flex-col justify-between my-5 rounded-lg mx-10 border rounded-lg">
+      <div className="font-sans font-bold flex flex-col justify-between rounded-lg mx-10 border rounded-lg">
         <div className="mx-10 my-5">
           <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
             Events
@@ -20,9 +20,9 @@ const EventsPage = () => {
           <hr className="my-5 border-gray-300" />
         </div>
 
-        <div className="flex flex-wrap align-center justify-center">
+        <div className="flex flex-wrap align-center justify-center mb-10">
           <div className="my-3 mx-5">
-            <Link href="/main/settings" passHref>
+            <Link href="/main/events/event-details" passHref>
               {/* change link */}
               <EventCard
                 Picture={ImageTesting1}
@@ -33,7 +33,7 @@ const EventsPage = () => {
             </Link>
           </div>
           <div className="my-3 mx-5">
-            <Link href="/main/settings" passHref>
+            <Link href="/main/events/event-details" passHref>
               {/* change link */}
               <EventCard
                 Picture={ImageTesting2}
@@ -44,7 +44,7 @@ const EventsPage = () => {
             </Link>
           </div>
           <div className="my-3 mx-5">
-            <Link href="/main/settings" passHref>
+            <Link href="/main/events/event-details" passHref>
               {/* change link */}
               <EventCard
                 Picture={ImageTesting3}

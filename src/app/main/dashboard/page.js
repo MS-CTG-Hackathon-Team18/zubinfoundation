@@ -105,7 +105,7 @@ const events = [
   },
 ];
 
-export default function dashbord() {
+export default function Dashbord() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
@@ -141,19 +141,18 @@ export default function dashbord() {
 
   return (
     <>
-      <NavigationBar />
       <div className="mt-5 mx-10 border rounded-lg">
         <div className="mx-10 my-5">
           <div className="flex items-center justify-between">
             <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
               Dashboard
             </h2>
-            <Button
+            {/* <Button
               className="text-white px-4 py-2 rounded hover:bg-black-600"
               onClick={togglePopup}
             >
               Add Event
-            </Button>
+            </Button> */}
           </div>
           <h4 className="scroll-m-20 text-xl font-semibold tracking-tight text-gray-400">
             For admins to manage events.
@@ -202,7 +201,6 @@ export default function dashbord() {
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead></TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Username</TableHead>
                             <TableHead>Number</TableHead>
@@ -211,9 +209,6 @@ export default function dashbord() {
                         <TableBody>
                           {waitlist.map((person, index) => (
                             <TableRow key={index}>
-                              <TableCell>
-                                <Checkbox id="terms" />
-                              </TableCell>
                               <TableCell>{person.name}</TableCell>
                               <TableCell>{person.username}</TableCell>
                               <TableCell>{person.number}</TableCell>
@@ -238,7 +233,7 @@ export default function dashbord() {
           </TableFooter>
         </Table>
       </div>
-      {isPopupVisible && (
+      {/* {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-lg w-[600px]">
             <h3 className="text-2xl font-bold mb-4">Add New Event</h3>
@@ -399,7 +394,7 @@ export default function dashbord() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }

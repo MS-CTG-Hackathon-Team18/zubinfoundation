@@ -9,6 +9,8 @@ import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../globals.css"; // Ensure this is correct path
 import NavigationBar from "@/components/Navigationbar";
+import Dashbord from "../dashboard/page";
+import { Button } from "@/components/ui/button";
 
 const locales = {
   "en-US": enUS,
@@ -83,8 +85,13 @@ const CalendarPage = () => {
       for (let i = 0; i < recurrenceCount; i++) {
         const eventStart = new Date(startDate);
         const eventEnd = new Date(endDate);
-        eventStart.setDate(startDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2));
-        eventEnd.setDate(endDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2));
+        eventStart.setDate(
+          startDate.getDate() +
+            i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2)
+        );
+        eventEnd.setDate(
+          endDate.getDate() + i * 7 * (newEvent.recurrence === "weekly" ? 1 : 2)
+        );
         eventsToAdd.push({
           id: id + i,
           title: newEvent.name,
@@ -122,7 +129,11 @@ const CalendarPage = () => {
     // If deleteAll is true, delete all events with the same recurringId
     const eventToDelete = myEvents.find((event) => event.id === eventId);
     if (deleteAll && eventToDelete.recurringId) {
-      setMyEvents(myEvents.filter((event) => event.recurringId !== eventToDelete.recurringId));
+      setMyEvents(
+        myEvents.filter(
+          (event) => event.recurringId !== eventToDelete.recurringId
+        )
+      );
     } else {
       setMyEvents(myEvents.filter((event) => event.id !== eventId));
     }
@@ -236,224 +247,257 @@ const CalendarPage = () => {
   return (
     <div>
       <NavigationBar />
+      <div className="mx-10 border rounded-lg">
+        <h1 className="title-of-page">Event Calendar</h1>
 
-      <h1 className="title-of-page">Event Calendar</h1>
-
-      {/* Center the "Add Event" button */}
-      <div className="flex justify-center my-4">
-        <button className="open-modal-btn bg-blue-500 text-white py-2 px-4 rounded" onClick={() => setShowModal(true)}>
-          Add Event
-        </button>
-      </div>
-
-      {/* Modal for adding/editing events */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <button className="close-modal-btn" onClick={() => setShowModal(false)}>
-              Close
-            </button>
-            <form onSubmit={handleAddEvent} className="form-container">
-              <input
-                type="text"
-                name="name"
-                placeholder="Event Name"
-                value={newEvent.name}
-                onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-                required
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <br />
-              <input
-                type="date"
-                name="eventDate"
-                placeholder="Event Date"
-                value={newEvent.eventDate}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, eventDate: e.target.value })
-                }
-                required
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <br />
-              <input
-                type="time"
-                name="startTime"
-                placeholder="Start Time"
-                value={newEvent.startTime}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, startTime: e.target.value })
-                }
-                required
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <br />
-              <label className="block my-2">
-                <input
-                  type="checkbox"
-                  checked={newEvent.hasEndTime}
-                  onChange={(e) =>
-                    setNewEvent({ ...newEvent, hasEndTime: e.target.checked })
-                  }
-                />
-                Specify End Time
-              </label>
-              {newEvent.hasEndTime && (
-                <>
-                  <br />
-                  <input
-                    type="time"
-                    name="endTime"
-                    placeholder="End Time"
-                    value={newEvent.endTime}
-                    onChange={(e) =>
-                      setNewEvent({ ...newEvent, endTime: e.target.value })
-                    }
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </>
-              )}
-              <br />
-              <input
-                type="text"
-                name="venue"
-                placeholder="Venue"
-                value={newEvent.venue}
-                onChange={(e) => setNewEvent({ ...newEvent, venue: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <br />
-              <select
-                value={newEvent.eventType}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, eventType: e.target.value })
-                }
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="women-girls">Women & Girls</option>
-                <option value="economic-opportunity">Economic Opportunity</option>
-                <option value="family-resources">Family Resources</option>
-                <option value="mental-health">Mental Health</option>
-                <option value="emergency-relief">Emergency Relief</option>
-              </select>
-              <br />
-              <input
-                type="number"
-                name="volunteersNeeded"
-                placeholder="Volunteers Needed"
-                value={newEvent.volunteersNeeded}
-                onChange={(e) =>
-                  setNewEvent({
-                    ...newEvent,
-                    volunteersNeeded: parseInt(e.target.value),
-                  })
-                }
-                required
-                className="w-full p-2 border border-gray-300 rounded"
-              />
-              <br />
-              <textarea
-                name="description"
-                placeholder="Event Description"
-                value={newEvent.description}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, description: e.target.value })
-                }
-                className="w-full p-2 border border-gray-300 rounded"
-              ></textarea>
-              <br />
-              {/* New field for selecting recurrence pattern */}
-              <label className="block my-2">Recurrence:</label>
-              <select
-                value={newEvent.recurrence}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, recurrence: e.target.value })
-                }
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="none">None</option>
-                <option value="weekly">Weekly</option>
-                <option value="bi-weekly">Bi-weekly</option>
-              </select>
-              <br />
-              <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">{isEditMode ? "Update Event" : "Add Event"}</button>
-            </form>
-          </div>
+        {/* Center the "Add Event" button */}
+        <div className="flex justify-center my-2">
+          <button
+            className="open-modal-btn bg-blue-500 text-white py-2 px-4 rounded"
+            onClick={() => setShowModal(true)}
+          >
+            Add Event
+          </button>
         </div>
-      )}
+        <hr className="my-5 border-gray-300" />
+        {/* Modal for adding/editing events */}
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <button
+                className="close-modal-btn"
+                onClick={() => setShowModal(false)}
+              >
+                Close
+              </button>
+              <form onSubmit={handleAddEvent} className="form-container">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Event Name"
+                  value={newEvent.name}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, name: e.target.value })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <input
+                  type="date"
+                  name="eventDate"
+                  placeholder="Event Date"
+                  value={newEvent.eventDate}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, eventDate: e.target.value })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <input
+                  type="time"
+                  name="startTime"
+                  placeholder="Start Time"
+                  value={newEvent.startTime}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, startTime: e.target.value })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <label className="block my-2">
+                  <input
+                    type="checkbox"
+                    checked={newEvent.hasEndTime}
+                    onChange={(e) =>
+                      setNewEvent({ ...newEvent, hasEndTime: e.target.checked })
+                    }
+                  />
+                  Specify End Time
+                </label>
+                {newEvent.hasEndTime && (
+                  <>
+                    <br />
+                    <input
+                      type="time"
+                      name="endTime"
+                      placeholder="End Time"
+                      value={newEvent.endTime}
+                      onChange={(e) =>
+                        setNewEvent({ ...newEvent, endTime: e.target.value })
+                      }
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                  </>
+                )}
+                <br />
+                <input
+                  type="text"
+                  name="venue"
+                  placeholder="Venue"
+                  value={newEvent.venue}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, venue: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <select
+                  value={newEvent.eventType}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, eventType: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
+                  <option value="women-girls">Women & Girls</option>
+                  <option value="economic-opportunity">
+                    Economic Opportunity
+                  </option>
+                  <option value="family-resources">Family Resources</option>
+                  <option value="mental-health">Mental Health</option>
+                  <option value="emergency-relief">Emergency Relief</option>
+                </select>
+                <br />
+                <input
+                  type="number"
+                  name="volunteersNeeded"
+                  placeholder="Volunteers Needed"
+                  value={newEvent.volunteersNeeded}
+                  onChange={(e) =>
+                    setNewEvent({
+                      ...newEvent,
+                      volunteersNeeded: parseInt(e.target.value),
+                    })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                <br />
+                <textarea
+                  name="description"
+                  placeholder="Event Description"
+                  value={newEvent.description}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, description: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                ></textarea>
+                <br />
+                {/* New field for selecting recurrence pattern */}
+                <label className="block my-2">Recurrence:</label>
+                <select
+                  value={newEvent.recurrence}
+                  onChange={(e) =>
+                    setNewEvent({ ...newEvent, recurrence: e.target.value })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
+                  <option value="none">None</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="bi-weekly">Bi-weekly</option>
+                </select>
+                <br />
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                >
+                  {isEditMode ? "Update Event" : "Add Event"}
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
 
-      {/* Modal for displaying event details */}
-      {showEventDetailsModal && selectedEvent && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <button className="close-modal-btn" onClick={() => setShowEventDetailsModal(false)}>
-              Close
-            </button>
-            <h2 className="text-xl font-bold">{selectedEvent.title}</h2>
-            <p>Type: {selectedEvent.eventType}</p>
-            <p>Start: {selectedEvent.start.toLocaleString()}</p>
-            <p>End: {selectedEvent.end.toLocaleString()}</p>
-            <p>Venue: {selectedEvent.venue}</p>
-            <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
-            <p>Description: {selectedEvent.description}</p>
-            {selectedEvent.recurringId && (
+        {/* Modal for displaying event details */}
+        {showEventDetailsModal && selectedEvent && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <button
+                className="close-modal-btn"
+                onClick={() => setShowEventDetailsModal(false)}
+              >
+                Close
+              </button>
+              <h2 className="text-xl font-bold">{selectedEvent.title}</h2>
+              <p>Type: {selectedEvent.eventType}</p>
+              <p>Start: {selectedEvent.start.toLocaleString()}</p>
+              <p>End: {selectedEvent.end.toLocaleString()}</p>
+              <p>Venue: {selectedEvent.venue}</p>
+              <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
+              <p>Description: {selectedEvent.description}</p>
+              {selectedEvent.recurringId && (
+                <button
+                  className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
+                  onClick={() => handleDeleteEvent(selectedEvent.id, true)}
+                >
+                  Delete All Instances
+                </button>
+              )}
               <button
                 className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
-                onClick={() => handleDeleteEvent(selectedEvent.id, true)}
+                onClick={() => handleDeleteEvent(selectedEvent.id)}
               >
-                Delete All Instances
+                Delete Event
               </button>
-            )}
-            <button className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded" onClick={() => handleDeleteEvent(selectedEvent.id)}>
-              Delete Event
-            </button>
-            <button className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded" onClick={handleEditEvent}>
-              Edit Event
-            </button>
+              <button
+                className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded"
+                onClick={handleEditEvent}
+              >
+                Edit Event
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Calendar
-        localizer={localizer}
-        events={myEvents}
-        startAccessor="start"
-        endAccessor="end"
-        titleAccessor="title" // Use title accessor for displaying event name
-        style={{ height: 600, margin: "50px" }}
-        views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]} // Enable multiple views
-        defaultView={Views.MONTH} // Set the default view
-        step={60} // Set the time step in minutes
-        showMultiDayTimes // Show times for multi-day events
-        toolbar // Enable the toolbar
-        date={currentDate} // Bind currentDate to the calendar
-        view={currentView} // Bind currentView to the calendar
-        onNavigate={handleNavigate} // Handle navigation
-        onView={handleViewChange} // Handle view changes
-        onSelectEvent={handleSelectEvent}
-        eventPropGetter={eventStyleGetter} // Apply color coding
-        popup={true} // Enables the "see more" popup
-        components={{
-          event: ({ event }) => <span>{event.title}</span>, // Use a simple event display
-        }}
-      />
-
+        <Calendar
+          localizer={localizer}
+          events={myEvents}
+          startAccessor="start"
+          endAccessor="end"
+          titleAccessor="title" // Use title accessor for displaying event name
+          className="h-[600px] mx-[50px] my-[30px]"
+          views={[Views.MONTH, Views.WEEK, Views.DAY, Views.AGENDA]} // Enable multiple views
+          defaultView={Views.MONTH} // Set the default view
+          step={60} // Set the time step in minutes
+          showMultiDayTimes // Show times for multi-day events
+          toolbar // Enable the toolbar
+          date={currentDate} // Bind currentDate to the calendar
+          view={currentView} // Bind currentView to the calendar
+          onNavigate={handleNavigate} // Handle navigation
+          onView={handleViewChange} // Handle view changes
+          onSelectEvent={handleSelectEvent}
+          eventPropGetter={eventStyleGetter} // Apply color coding
+          popup={true} // Enables the "see more" popup
+          components={{
+            event: ({ event }) => <span>{event.title}</span>, // Use a simple event display
+          }}
+        />
+      </div>
+      <Dashbord />
       {/* Review Applications Section */}
-      <h1 className="title-of-page">Review Applications</h1>
-      {applications.map((application, index) => (
-        <div key={index} className="application">
-          <h2 className="details">{application.name}</h2>
-          <p className="details">Age: {application.age}</p>
-          <p className="details">Sex: {application.sex}</p>
-          <p className="details">Event: {application.event}</p>
-          <p className="details">Skillset: {application.skillset}</p>
-          <div className="buttons">
-            <button onClick={() => handleAccept(index)} className="accept">Accept</button>
-            <button onClick={() => handleReject(index)} className="reject">Reject</button>
+      <div className="mt-5 mx-10 border rounded-lg">
+        <h1 className="title-of-page">Review Applications</h1>
+        {applications.map((application, index) => (
+          <div key={index} className="application ml-20">
+            <h2 className="details">{application.name}</h2>
+            <p className="details">Age: {application.age}</p>
+            <p className="details">Sex: {application.sex}</p>
+            <p className="details">Event: {application.event}</p>
+            <p className="details">Skillset: {application.skillset}</p>
+            <div className="buttons">
+              <Button onClick={() => handleAccept(index)} className="accept">
+                Accept
+              </Button>
+              <Button onClick={() => handleReject(index)} className="reject">
+                Reject
+              </Button>
+            </div>
+            <hr />
           </div>
-          <hr />
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

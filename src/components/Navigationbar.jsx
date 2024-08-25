@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 
 const NavigationBar = () => {
-  return ( 
+  return (
     <nav className="block sticky w-full h-auto top-0 bg-white text-black py-4 z-10">
       <div className="px-12 flex justify-between items-center">
         <div className="text-lg font-bold flex-row">
@@ -31,11 +31,8 @@ const NavigationBar = () => {
           <Link href="/main/chatbot" passHref>
             <span className="p-2 cursor-pointer">Chatbot</span>
           </Link>
-          <Link href="/main/dashboard" passHref>
-            <span className="p-2 cursor-pointer">Dashboard</span>
-          </Link>
           <Link href="/main/calendar" passHref>
-            <span className="p-2 cursor-pointer">Admin Page</span>
+            <span className="p-2 cursor-pointer">Admin</span>
           </Link>
           <Link href="/auth/login" passHref>
             <span className="p-2 cursor-pointer">Log In</span>
@@ -56,7 +53,7 @@ const NavigationBar = () => {
                 <Link href="/main/settings" passHref>
                   <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">Settings</span>
                 </Link>
-                <Link href="/main/settings" passHref>
+                <Link href="/main/events/my-events" passHref>
                   <span className="block cursor-pointer p-1 rounded-md hover:bg-gray-100">My events</span>
                 </Link>
                 <Link href="/logout" passHref>

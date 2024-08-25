@@ -387,6 +387,32 @@ const CalendarPage = () => {
                   className="w-full p-2 border border-gray-300 rounded"
                 ></textarea>
                 <br />
+
+                <div className="flex">
+                  <div className="mb-2 w-1/2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Training video
+                    </label>
+                    <input
+                      type="file"
+                      id="file_event"
+                      name="file_event"
+                      accept="image/png, image/jpeg .mp4"
+                    />
+                  </div>
+                  <div className="mb-2 w-1/2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Image of events
+                    </label>
+                    <input
+                      type="file"
+                      id="file_event"
+                      name="file_event"
+                      accept="image/png, image/jpeg"
+                    />
+                  </div>
+                </div>
+
                 {/* New field for selecting recurrence pattern */}
                 <label className="block my-2">Recurrence:</label>
                 <select
@@ -420,15 +446,52 @@ const CalendarPage = () => {
                 className="close-modal-btn"
                 onClick={() => setShowEventDetailsModal(false)}
               >
-                Close
+                x
               </button>
-              <h2 className="text-xl font-bold">{selectedEvent.title}</h2>
-              <p>Type: {selectedEvent.eventType}</p>
-              <p>Start: {selectedEvent.start.toLocaleString()}</p>
-              <p>End: {selectedEvent.end.toLocaleString()}</p>
-              <p>Venue: {selectedEvent.venue}</p>
-              <p>Volunteers Needed: {selectedEvent.volunteersNeeded}</p>
-              <p>Description: {selectedEvent.description}</p>
+              <div className="p-6 bg-white shadow-lg rounded-lg">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  {selectedEvent.title}
+                </h2>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Type: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.eventType}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Start: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.start.toLocaleString()}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">End: </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.end.toLocaleString()}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">Venue: </span>
+                  <span className="text-gray-600">{selectedEvent.venue}</span>
+                </div>
+                <div className="mb-2">
+                  <span className="font-semibold text-gray-700">
+                    Volunteers Needed:{" "}
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.volunteersNeeded}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-semibold text-gray-700">
+                    Description:{" "}
+                  </span>
+                  <span className="text-gray-600">
+                    {selectedEvent.description}
+                  </span>
+                </div>
+              </div>
+
               {selectedEvent.recurringId && (
                 <button
                   className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
@@ -438,13 +501,13 @@ const CalendarPage = () => {
                 </button>
               )}
               <button
-                className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded"
+                className="delete-event-btn bg-red-500 text-white py-2 px-4 rounded my-5"
                 onClick={() => handleDeleteEvent(selectedEvent.id)}
               >
                 Delete Event
               </button>
               <button
-                className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded"
+                className="edit-event-btn bg-yellow-500 text-white py-2 px-4 rounded my-5"
                 onClick={handleEditEvent}
               >
                 Edit Event

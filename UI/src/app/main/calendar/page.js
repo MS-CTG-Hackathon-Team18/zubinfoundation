@@ -7,7 +7,8 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./calendar.css"; // Ensure this is correct path
+import "../../globals.css"; // Ensure this is correct path
+import "./calendar.css";
 import NavigationBar from "@/components/Navigationbar";
 import Dashbord from "../dashboard/page";
 import { Button } from "@/components/ui/button";
@@ -248,17 +249,18 @@ const CalendarPage = () => {
     <div>
       <NavigationBar />
       <div className="mx-10 border rounded-lg">
-        <h1 className="title-of-page">Event Calendar</h1>
-
-        {/* Center the "Add Event" button */}
-        <div className="flex justify-center my-2">
+        <div className="mx-10 my-5 flex justify-between">
+          <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
+            Event Calendar
+          </h2>
           <button
-            className="open-modal-btn bg-black text-white py-2 px-4 rounded"
+            className="bg-black text-white py-2 px-4 rounded "
             onClick={() => setShowModal(true)}
           >
             Add Event
           </button>
         </div>
+        {/* Center the "Add Event" button */}
         <hr className="my-5 border-gray-300" />
         {/* Modal for adding/editing events */}
         {showModal && (

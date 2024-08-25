@@ -19,8 +19,11 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 function Copyright(props) {
+  const router = useRouter()
   return (
     <Typography
       variant="body2"
@@ -76,7 +79,7 @@ export default function SignUp() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, userName: userName }),
       });
 
       const data = await response.json();
@@ -115,12 +118,24 @@ export default function SignUp() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ phone, password: password }),
+        cache: 'no-store'
       });
 
       const data = await response.json();
       console.log(data);
 
-      if (data.success) router.push('/')
+      if (data.success) {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser()
+        const { data, error } = await supabase.auth.getSession()
+
+        // insert user if user not in db
+        // const {data: checkUser, error} = await supabase
+        // .from('user_profiles')
+        // .onChange
+
+        router.push('/');
+      }
     } catch (error) {
       console.error('Error sending OTP:', error);
     }

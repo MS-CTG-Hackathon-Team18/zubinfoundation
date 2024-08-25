@@ -22,7 +22,6 @@ export async function sendSignUpOtp(phone, userData) {
   const { data, error } = await supabase.auth.signInWithOtp({
     phone,
     options: {
-      // channel: 'whatsapp',
       data: userData
     },
   });
@@ -41,7 +40,7 @@ export async function verifyOtp(phone, password) {
     type: "sms",
   })
 
-  return error ? { success: false, error } : { success: true, data };
+  return error ? { success: false, error } : { success: true, session };
   revalidatePath('/', 'layout')
   redirect('/')
 };

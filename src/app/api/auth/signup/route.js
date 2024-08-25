@@ -11,6 +11,6 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: result.error });
     }
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

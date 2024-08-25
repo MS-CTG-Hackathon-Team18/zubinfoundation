@@ -120,6 +120,7 @@ export default function SignUp() {
       const data = await response.json();
       console.log(data);
 
+      if (data.success) router.push('/')
     } catch (error) {
       console.error('Error sending OTP:', error);
     }

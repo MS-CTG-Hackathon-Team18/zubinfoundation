@@ -34,6 +34,9 @@ const NavigationBar = () => {
           <Link href="/main/dashboard" passHref>
             <span className="p-2 cursor-pointer">Dashboard</span>
           </Link>
+          <Link href="/main/calendar" passHref>
+            <span className="p-2 cursor-pointer">Admin Page</span>
+          </Link>
           <Link href="/auth/login" passHref>
             <span className="p-2 cursor-pointer">Log In</span>
           </Link>

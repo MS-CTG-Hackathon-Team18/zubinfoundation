@@ -7,7 +7,7 @@ import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
 import enUS from "date-fns/locale/en-US";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "../globals.css"; // Ensure this is correct path
+import "./calendar.css"; // Ensure this is correct path
 import NavigationBar from "@/components/Navigationbar";
 import Dashbord from "../dashboard/page";
 import { Button } from "@/components/ui/button";
@@ -253,7 +253,7 @@ const CalendarPage = () => {
         {/* Center the "Add Event" button */}
         <div className="flex justify-center my-2">
           <button
-            className="open-modal-btn bg-blue-500 text-white py-2 px-4 rounded"
+            className="open-modal-btn bg-black text-white py-2 px-4 rounded"
             onClick={() => setShowModal(true)}
           >
             Add Event
@@ -268,7 +268,7 @@ const CalendarPage = () => {
                 className="close-modal-btn"
                 onClick={() => setShowModal(false)}
               >
-                Close
+                x
               </button>
               <form onSubmit={handleAddEvent} className="form-container">
                 <input
@@ -480,14 +480,17 @@ const CalendarPage = () => {
       <div className="mt-5 mx-10 border rounded-lg">
         <h1 className="title-of-page">Review Applications</h1>
         {applications.map((application, index) => (
-          <div key={index} className="application ml-20">
+          <div key={index} className="application mx-10">
             <h2 className="details">{application.name}</h2>
             <p className="details">Age: {application.age}</p>
             <p className="details">Sex: {application.sex}</p>
             <p className="details">Event: {application.event}</p>
             <p className="details">Skillset: {application.skillset}</p>
-            <div className="buttons">
-              <Button onClick={() => handleAccept(index)} className="accept">
+            <div className="flex justify-end">
+              <Button
+                onClick={() => handleAccept(index)}
+                className="bg-red-500 text-white mr-5 mb-5"
+              >
                 Accept
               </Button>
               <Button onClick={() => handleReject(index)} className="reject">

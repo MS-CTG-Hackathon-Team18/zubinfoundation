@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import "../../globals.css";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -46,7 +47,7 @@ export default function settings() {
   return (
     <div>
       <Navigationbar />
-      <div className="mt-5 mx-10 border rounded-lg">
+      <div className="my-5 mx-10 border rounded-lg">
         <div className="mx-10 my-5">
           <h2 className="scroll-m-20 pb-2 text-3xl font-bold tracking-tight">
             Settings
@@ -98,7 +99,7 @@ export default function settings() {
           </div>
           <div className="w-full">
             {activeSection === "profile" && (
-              <div className="mt-5 mx-10">
+              <div className="my-5 mx-10">
                 <h3 className="text-xl font-bold">Profile Details</h3>
                 <p>This is how others will see you on the site.</p>
                 <hr className="my-5 border-gray-300" />
@@ -137,7 +138,7 @@ export default function settings() {
               </div>
             )}
             {activeSection === "account" && (
-              <div className="mt-5 mx-10">
+              <div className="my-5 mx-10">
                 <h3 className="text-xl font-bold">Account</h3>
                 <p>
                   Update your account settings. Set your preferred language and
@@ -204,7 +205,7 @@ export default function settings() {
               </div>
             )}
             {activeSection === "appearance" && (
-              <div className="mt-5 mx-10">
+              <div className="my-5 mx-10">
                 <h3 className="text-xl font-bold">Appearance</h3>
                 <p>
                   Customize the appearance of the app. Automatically switch
@@ -248,7 +249,7 @@ export default function settings() {
               </div>
             )}
             {activeSection === "notification" && (
-              <div className="mt-5 mx-10">
+              <div className="my-5 mx-10">
                 <h3 className="text-xl font-bold">Notification</h3>
                 <p>Configure how you receive notifications.</p>
                 <hr className="my-5 border-gray-300" />

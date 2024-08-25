@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
-import { uploadEvent } from "@/app/api/db/put-actions";
+import { uploadEvent } from "@/app/api/db/post-actions";
 
 export default function Page() {
   const [formData, setFormData] = useState({

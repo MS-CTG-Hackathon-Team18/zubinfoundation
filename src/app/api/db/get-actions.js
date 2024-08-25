@@ -2,49 +2,36 @@
 import { supabase } from "@/lib/supabase";
 import { v4 as uuidv4 } from 'uuid';
 
-export async function getUserData(userId = null) {
+export async function getUserDetails(userId = null) {
   try {
-    if (userId == null) {
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
+    let query = supabase.from('user_profiles').select('*');
 
-      return error ? error : data;
-    } else {
-      const { data, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', userId)
+    if (userId !== null)
+      query = query.eq('user_id', userId);
 
-      return error ? error : data;
-    }
+    const { data, error } = await query;
 
+    return error ? { success: false, error: error } : { success: true, data: data };
   } catch (e) {
     console.error(e);
   }
 }
 
-export async function getEventDetails(eventId, params = null) {
+export async function getEventDetails({ eventId = null, params = null } = {}) {
   try {
-    if (params === null) {
-      const { data, error } = await supabase
-        .from('events')
-        .select('*, participants:events_user_profiles_bridge(*, user_profiles(*))')
-        .eq('event_id', eventId)
-        .single()
+    let query = supabase.from('events').select('*, participants:events_user_profiles_bridge(*, user_profiles(*))');
 
-      return error ? error : data;
-    } else {
+    if (params !== null) {
       const selects = params.join(', ');
-
-      const { data, error } = await supabase
-        .from('events')
-        .select(`${selects}, participants:events_user_profiles_bridge(*, user_profiles(*))`)
-        .eq('event_id', eventId)
-        .single()
-
-      return error ? error : data;
+      query = query.select(`${selects}, participants:events_user_profiles_bridge(*, user_profiles(*))`)
     }
+
+    if (eventId !== null)
+      query = query.eq('event_id', eventId).single();
+
+    const { data, error } = await query;
+
+    return error ? { success: false, error: error } : { success: true, data: data }
   } catch (e) {
     console.log(e);
   }
@@ -57,7 +44,7 @@ export async function getUserEvents(userId) {
       .select(`user_type, user_events:events(*)`)
       .eq('user_id', userId)
 
-    return error ? error : data;
+    return error ? { success: false, error: error } : { success: true, data: data };
   } catch (e) {
     console.error(e);
   }
@@ -65,36 +52,19 @@ export async function getUserEvents(userId) {
 
 export async function getApplications({ eventId = null, userId = null } = {}) {
   try {
-    if (userId === null && eventId === null) {
-      const { data, error } = await supabase
-        .from('event_applications')
-        .select('*')
+    let query = supabase.from('event_applications').select('*')
 
-      return error ? error : data;
-    } else if (userId === null) {
-      const { data, error } = await supabase
-        .from('event_applications')
-        .select('*')
-        .eq('event_id', eventId);
-
-      return error ? error : data;
-    } else if (eventId === null) {
-      const { data, error } = await supabase
-        .from('event_applications')
-        .select('*')
-        .eq('user_id', userId)
-
-      return error ? error : data;
-    } else {
-      const { data, error } = await supabase
-        .from('event_applications')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('event_id', eventId)
-
-      return error ? error : data;
+    if (eventId !== null) {
+      query = query.eq('event_id', eventId)
     }
 
+    if (userId !== null) {
+      query = query.eq('user_id', userId)
+    }
+
+    const { data, error } = await query
+
+    return error ? { success: false, error: error } : { success: true, data: data };
   } catch (e) {
     console.error(e);
   }

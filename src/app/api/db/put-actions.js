@@ -1,91 +1,37 @@
 'use server'
 import { supabase } from "@/lib/supabase";
-import { v4 as uuidv4 } from 'uuid';
 
-export async function uploadEvent(data, imageFile, imageExtension, videoFile = null, videoExtension = null) {
-  const imageBuffer = Buffer.from(imageFile);
-  const imageFileName = uuidv4() + '.' + imageExtension;
-
+export async function updateApplicationStatus(applicationId, newStatus) {
   try {
-    const { imageUploadData, imageUploadError } = await supabase
-      .storage
-      .from('event_images')
-      .upload(imageFileName, imageBuffer, {
-        cacheControl: '3600',
-        upsert: false
-      })
+    const validStatuses = ['pending', 'approved', 'rejected', 'waitlisted'];
+    if (!validStatuses.includes(newStatus)) {
+      throw new Error('Invalid status. Must be one of: ' + validStatuses.join(', '));
+    }
 
-    if (imageUploadError) return imageUploadError;
-
-
-    const { data: { publicUrl: imageUrl } } = supabase
-      .storage
-      .from('event_images')
-      .getPublicUrl(imageFileName)
-
-
-    data.image_url = imageUrl;
-
-    const { uploadEventError } = await supabase
-      .from('events')
-      .insert([data])
-      .select()
-
-    return uploadEventError ? uploadEventError : 200;
-
-    return 200;
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-export async function enrollUserToEvent(eventId, userId, userType) {
-  try {
-    const { uploadEventError } = await supabase
-      .from('events_user_profiles_bridge')
-      .insert([{ event_id: eventId, user_id: userId, user_type: userType }])
-      .select()
-
-    if (uploadEventError) return uploadEventError;
-
-    return 200;
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-export async function submitApplication(data) {
-  try {
-    const { uploadApplicationError } = await supabase
+    const { data, error } = await supabase
       .from('event_applications')
-      .insert([data])
+      .update({ status: newStatus })
+      .eq('application_id', applicationId)
       .select()
 
-    return uploadApplicationError ? uploadApplicationError : 200;
-  } catch (e) {
-    console.error(e);
+    return error ? { success: false, error } : { success: true }
+  } catch (error) {
+    console.error('Error updating application status:', error.message)
+    return null
   }
 }
 
-export async function uploadVideo(videoFile, videoExtension) {
-  const videoBuffer = Buffer.from(videoFile);
-  const videoFileName = uuidv4() + '.' + videoExtension;
+export async function updateEvent(eventId, updatedData) {
+  try {
+    const { data, error } = await supabase
+      .from('events')
+      .update(updatedData)
+      .eq('event_id', eventId)
+      .select()
 
-  const { videoUploadData, videoUploadError } = await supabase
-    .storage
-    .from('event_videos')
-    .upload(videoFileName, videoBuffer, {
-      cacheControl: '3600',
-      upsert: false
-    })
-
-  if (videoUploadError) console.error(videoUploadError);
-
-  const { data: { publicUrl: videoUrl } } = supabase
-    .storage
-    .from('event_videos')
-    .getPublicUrl(videoFileName)
-
-  data.training_url = videoUrl;
+    return error ? { success: false, error } : { success: true }
+  } catch (error) {
+    console.error('Error updating application status:', error.message)
+    return null
+  }
 }
-

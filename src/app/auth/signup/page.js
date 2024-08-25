@@ -59,26 +59,70 @@ export default function SignUp() {
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState(Array(6).fill("")); // State to manage OTP input
   const [codeSent, setCodeSent] = useState(false); // State to manage if code is sent
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState({
+    firstName: "",
+    lastName: "",
+  })
 
-  const handleSendVerificationCode = () => {
+  const handleSendVerificationCode = async () => {
     setShowOTP(true);
     setCodeSent(true);
     // Add your logic to send the verification code here
-    console.log("Verification code sent.");
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     // Logic to resend the verification code
-    console.log("Verification code resent.");
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone, userName: userName }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleVerification = async () => {
+    try {
+      const response = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone, password: password }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
   };
 
   return (
@@ -104,7 +148,6 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
@@ -117,6 +160,10 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  onChange={(e) => setUserName(prevState => ({
+                    ...prevState,
+                    [e.target.name]: e.target.value
+                  }))}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -127,6 +174,10 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  onChange={(e) => setUserName(prevState => ({
+                    ...prevState,
+                    [e.target.name]: e.target.value
+                  }))}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -137,6 +188,7 @@ export default function SignUp() {
                   label="Phone Number"
                   name="phoneNumber"
                   autoComplete="phone"
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </Grid>
               {showOTP && (
@@ -152,7 +204,11 @@ export default function SignUp() {
                     <div className="text-gray-500">
                       <h4>One-time Password:</h4>
                     </div>
-                    <InputOTP maxLength={6}>
+                    <InputOTP
+                      maxLength={6}
+                      value={password}
+                      onChange={(value) => setPassword(value)}
+                    >
                       <InputOTPGroup>
                         <InputOTPSlot index={0} />
                         <InputOTPSlot index={1} />
@@ -210,10 +266,11 @@ export default function SignUp() {
               </>
             )}
             <Button
-              type="submit"
+              type="button"
               fullWidth
               variant="contained"
               sx={{ mt: 1, mb: 2 }}
+              onClick={handleVerification}
             >
               Sign Up
             </Button>

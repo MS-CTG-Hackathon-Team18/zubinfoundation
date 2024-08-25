@@ -40,7 +40,7 @@ const EventsPage = () => {
             ))}
           </div>
         </div>
-        
+
       </div>
     </>
   );

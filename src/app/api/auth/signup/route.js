@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendSignUpOtp } from "@/app/auth/actions";
+import { sendSignUpOtp } from "@/app/api/auth/actions";
 
 export async function POST(request) {
   const { phone, userName } = await request.json();

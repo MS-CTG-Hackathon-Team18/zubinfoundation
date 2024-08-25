@@ -13,23 +13,15 @@ export function AuthTest() {
     lastName: "",
   })
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserName(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
   const sendSignInOtp = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/auth/signin', {
+      const response = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ phone, isSignUp: false }),
+        body: JSON.stringify({ phone }),
       });
 
       const data = await response.json();

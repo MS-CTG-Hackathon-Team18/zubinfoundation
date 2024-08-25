@@ -1,8 +1,10 @@
 'use server'
 import { supabase } from "@/lib/supabase";
+import { cookies } from "next/headers";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function getUserDetails(userId = null) {
+  const _cookies = cookies()
   try {
     let query = supabase.from('user_profiles').select('*');
 
@@ -18,6 +20,7 @@ export async function getUserDetails(userId = null) {
 }
 
 export async function getEventDetails({ eventId = null, params = null } = {}) {
+  const _cookies = cookies()
   try {
     let query = supabase.from('events').select('*, participants:events_user_profiles_bridge(*, user_profiles(*))');
 
@@ -38,6 +41,7 @@ export async function getEventDetails({ eventId = null, params = null } = {}) {
 }
 
 export async function getUserEvents(userId) {
+  const _cookies = cookies()
   try {
     const { data, error } = await supabase
       .from('events_user_profiles_bridge')
@@ -51,6 +55,7 @@ export async function getUserEvents(userId) {
 }
 
 export async function getApplications({ eventId = null, userId = null } = {}) {
+  const _cookies = cookies()
   try {
     let query = supabase.from('event_applications').select('*')
 

@@ -36,29 +36,72 @@ const theme = createTheme({
 });
 
 export default function SignInSide() {
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [showOTP, setShowOTP] = useState(false);
   const [otp, setOtp] = useState(Array(6).fill("")); // State to manage OTP input
   const [codeSent, setCodeSent] = useState(false); // State to manage if code is sent
 
-  const handleSendVerificationCode = () => {
+  const handleSendVerificationCode = async () => {
     setShowOTP(true);
     setCodeSent(true);
     // Add your logic to send the verification code here
+    try {
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
     console.log("Verification code sent.");
   };
 
-  const handleResendCode = () => {
+  const handleResendCode = async () => {
     // Logic to resend the verification code
+    try {
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
+    console.log("Verification code sent.");
     console.log("Verification code resent.");
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+  const handleVerification = async () => {
+    try {
+      const response = await fetch('/api/auth/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phone, password: password }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.success) router.push('/')
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+    }
   };
 
   return (
@@ -101,7 +144,6 @@ export default function SignInSide() {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
@@ -113,6 +155,7 @@ export default function SignInSide() {
                     label="Phone Number"
                     name="phoneNumber"
                     autoComplete="phone"
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </Grid>
                 {showOTP && (
@@ -128,7 +171,11 @@ export default function SignInSide() {
                       <div className="text-gray-500">
                         <h4>One-time Password:</h4>
                       </div>
-                      <InputOTP maxLength={6}>
+                      <InputOTP
+                        maxLength={6}
+                        value={password}
+                        onChange={(value) => setPassword(value)}
+                      >
                         <InputOTPGroup>
                           <InputOTPSlot index={0} />
                           <InputOTPSlot index={1} />
@@ -186,13 +233,11 @@ export default function SignInSide() {
                 </>
               )}
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
-                sx={{
-                  mt: 1,
-                  mb: 2,
-                }}
+                sx={{ mt: 1, mb: 2 }}
+                onClick={handleVerification}
               >
                 Sign In
               </Button>

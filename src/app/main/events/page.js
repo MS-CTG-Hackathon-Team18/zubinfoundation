@@ -37,7 +37,7 @@ const EventsPage = () => {
               {/* change link */}
               <EventCard
                 Picture={ImageTesting2}
-                Title={"Footable"}
+                Title={"Football"}
                 Location={"Singapore"}
                 DateTime={"2025-02-02 4pm"}
               />

@@ -20,10 +20,20 @@ const MyEvents = () => {
           </div>
           <div className="flex flex-wrap align-center justify-center">
             <div className="my-3 mx-5">
-              <EventCard Picture={ImageTesting1} />
+              <EventCard
+                Picture={ImageTesting1}
+                Title={"Yoga"}
+                Location={"Hong Kong"}
+                DateTime={"2025-02-01 3pm"}
+              />
             </div>
             <div className="my-3 mx-5">
-              <EventCard Picture={ImageTesting2} />
+              <EventCard
+                Picture={ImageTesting2}
+                Title={"Footable"}
+                Location={"Singapore"}
+                DateTime={"2025-02-02 4pm"}
+              />
             </div>
           </div>
         </div>

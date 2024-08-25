@@ -38,7 +38,7 @@ const IntroductionPage = () => {
       </section>
 
       <section className="programs py-16">
-        <div className="container mx-auto text-center">
+        <div className="container-program mx-auto text-center">
           <h2 className="text-3xl font-bold">Our Programs</h2>
           <div className="flex flex-wrap justify-center mt-8">
             {[
@@ -48,7 +48,7 @@ const IntroductionPage = () => {
               "Mental Health",
               "Emergency Relief",
             ].map((program) => (
-              <div key={program} className="w-1/5 p-4">
+              <div key={program} className="w-1/6 p-4">
                 <div className="bg-white shadow-lg rounded-lg p-6">
                   <Image
                     src={`/${program.toLowerCase().replaceAll(" ", "-")}.jpg`}
